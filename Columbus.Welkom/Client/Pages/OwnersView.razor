@@ -1,0 +1,52 @@
+﻿@page "/"
+@using Columbus.UDP.Interfaces;
+@inject NotificationService NotificationService
+@inject IOwnerService OwnerService
+
+<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical">
+    <RadzenText TextStyle="TextStyle.DisplayH6">
+        Leden
+    </RadzenText>
+
+    <RadzenButton Text="Ledenbestand"
+                  ButtonStyle="ButtonStyle.Primary"
+                  ButtonType="ButtonType.Button"
+                  Click="ReadFile" />
+
+    <RadzenDataGrid Data="_owners">
+        <Columns>
+            <RadzenDataGridColumn TItem="Owner" Property="ID" />
+            <RadzenDataGridColumn TItem="Owner" Property="Name" />
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [CascadingParameter]
+    public int Club { get; set; }
+    [CascadingParameter]
+    public int Year { get; set; }
+
+    private IEnumerable<Owner> _owners = new List<Owner>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _owners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+    }
+
+    private async Task ReadFile()
+    {
+        try
+        {
+            _owners = await OwnerService.ReadOwnersFromFile();
+        } catch (JSException)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
+            return;
+        }
+
+        OwnerService.SetStorage(_owners, Club, Year);
+    }
+}

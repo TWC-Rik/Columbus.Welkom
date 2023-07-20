@@ -1,0 +1,74 @@
+﻿@page "/races"
+@inject IRaceService RaceService
+@inject NotificationService NotificationService
+
+<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical">
+    <RadzenText TextStyle="TextStyle.DisplayH6">
+        Vluchten
+    </RadzenText>
+
+    <RadzenButton Text="W-Bestanden"
+                  ButtonStyle="ButtonStyle.Primary"
+                  ButtonType="ButtonType.Button"
+                  Click="ReadDirectory" />
+
+    <RadzenDataGrid Data="_races" IsLoading="_isLoading">
+        <Columns>
+            <RadzenDataGridColumn TItem="Race" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Race" Title="Lengtegraad">
+                <Template Context="race">
+                    @Math.Round(race.Location.Longitude, 2)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Race" Title="Breedtegraad">
+                <Template Context="race">
+                    @Math.Round(race.Location.Lattitude, 2)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Race" Title="Leden">
+                <Template Context="race">
+                    @race.OwnerRaces.Count()
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Race" Title="Duiven">
+                <Template Context="race">
+                    @race.PigeonRaces.Count()
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [CascadingParameter]
+    public int Club { get; set; }
+    [CascadingParameter]
+    public int Year { get; set; }
+
+    private IEnumerable<Race> _races = null!;
+    private bool _isLoading = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _races = RaceService.GetStorage(Club, Year) ?? new List<Race>();
+    }
+
+    private async Task ReadDirectory()
+    {
+        _isLoading = true;
+
+        try
+        {
+            _races = await RaceService.ReadRacesFromDirectory();
+        } catch (JSException)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
+            return;
+        }
+
+        RaceService.SetStorage(_races, Club, Year);
+        _isLoading = false;
+    }
+}
