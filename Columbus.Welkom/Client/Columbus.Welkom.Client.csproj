@@ -17,12 +17,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="4.13.6" />
+    <PackageReference Include="Radzen.Blazor" Version="4.14.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Columbus\Columbus.Models\Columbus.Models.csproj" />
     <ProjectReference Include="..\..\..\Columbus\Columbus.UDP\Columbus.UDP.csproj" />
   </ItemGroup>
-
 </Project>

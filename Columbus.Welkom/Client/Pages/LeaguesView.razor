@@ -104,6 +104,6 @@
         base.OnInitialized();
 
         _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
-        _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<Owner>());
+        _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues();
     }
 }
