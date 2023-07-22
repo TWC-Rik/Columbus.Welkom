@@ -10,10 +10,10 @@
     <RadzenDropDown Data="_allOwners"
                     SelectAllText="Iedereen"
                     Style="min-width: 400px;"
-                    @bind-Value="_leagues.Participants"
+                    @bind-Value="_leagues.AllParticipants"
                     Multiple="true">
         <Template>
-            @((context as Owner)!.ID): @((context as Owner)!.Name)
+            @((context as LeagueOwner)!.Owner.ID): @((context as LeagueOwner)!.Owner.Name)
         </Template>
     </RadzenDropDown>
 
@@ -24,9 +24,9 @@
                     IsLoading="@(_leagues is null)"
                     EmptyText="Geen leden in deze divisie.">
         <Columns>
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Lidnummer" Property="ID" />
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Naam" Property="Name" />
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Punten" Property="Value" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Lidnummer" Property="Owner.ID" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Naam" Property="Owner.Name" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Punten" Property="Points" />
             <RadzenDataGridColumn TItem="LeagueOwner" Title="" Width="100px">
                 <Template>
                     <RadzenButton ButtonStyle="ButtonStyle.Success"
@@ -48,9 +48,9 @@
                     IsLoading="@(_leagues is null)"
                     EmptyText="Geen leden in deze divisie.">
         <Columns>
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Lidnummer" Property="ID" />
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Naam" Property="Name" />
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Punten" Property="Value" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Lidnummer" Property="Owner.ID" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Naam" Property="Owner.Name" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Punten" Property="Points" />
             <RadzenDataGridColumn TItem="LeagueOwner" Title="" Width="100px">
                 <Template>
                     <RadzenButton ButtonStyle="ButtonStyle.Success"
@@ -71,9 +71,9 @@
                     IsLoading="@(_leagues is null)"
                     EmptyText="Geen leden in deze divisie.">
         <Columns>
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Lidnummer" Property="ID" />
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Naam" Property="Name" />
-            <RadzenDataGridColumn TItem="LeagueOwner" Title="Punten" Property="Value" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Lidnummer" Property="Owner.ID" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Naam" Property="Owner.Name" />
+            <RadzenDataGridColumn TItem="LeagueOwner" Title="Punten" Property="Points" />
             <RadzenDataGridColumn TItem="LeagueOwner" Title="" Width="100px">
                 <Template>
                     <RadzenButton ButtonStyle="ButtonStyle.Success"
@@ -90,20 +90,19 @@
 </RadzenStack>
 
 @code {
-
-    [CascadingParameter]
+    [CascadingParameter(Name = "Club")]
     public int Club { get; set; }
-    [CascadingParameter]
+    [CascadingParameter(Name = "Year")]
     public int Year { get; set; }
 
     private Leagues _leagues = null!;
-    private IEnumerable<Owner> _allOwners = null!;
+    private IEnumerable<LeagueOwner> _allOwners = null!;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
-        _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues();
+        _allOwners = OwnerService.GetStorage(Club, Year)?.Select(owner => new LeagueOwner(owner)) ?? new List<LeagueOwner>();
+        _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<LeagueOwner>());
     }
 }

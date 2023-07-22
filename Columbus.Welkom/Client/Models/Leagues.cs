@@ -13,6 +13,15 @@ namespace Columbus.Welkom.Client.Models
             _participants = participants;
         }
 
+        public IEnumerable<LeagueOwner> AllParticipants
+        {
+            get => _participants;
+            set  {
+                _participants = value;
+                Console.WriteLine(_participants.Count());
+            }
+        }
+
         [JsonIgnore]
         public IEnumerable<LeagueOwner> FirstLeagueOwners => _participants.Where(p => p.League == League.First).OrderByDescending(p => p.Points);
 
@@ -22,23 +31,16 @@ namespace Columbus.Welkom.Client.Models
         [JsonIgnore]
         public IEnumerable<LeagueOwner> ThirdLeagueOwners => _participants.Where(p => p.League == League.Third).OrderByDescending(p => p.Points);
 
-        public void Promote(Owner owner)
+        public void Promote(LeagueOwner participant)
         {
-            LeagueOwner participant = GetLeagueOwner(owner);
             participant.League--;
         }
 
-        public void Demote(Owner owner)
+        public void Demote(LeagueOwner participant)
         {
-            LeagueOwner participant = GetLeagueOwner(owner);
-            participant.League--;
+            participant.League++;
         }
 
-        private LeagueOwner GetLeagueOwner(Owner owner) => _participants.First(p => p.OwnerID == owner.ID);
-
-        public void AddOwner(Owner owner)
-        {
-
-        }
+        private LeagueOwner GetLeagueOwner(Owner owner) => _participants.First(p => p.Owner.ID == owner.ID);
     }
 }
