@@ -22,9 +22,9 @@
 </RadzenStack>
 
 @code {
-    [CascadingParameter]
+    [CascadingParameter(Name = "Club")]
     public int Club { get; set; }
-    [CascadingParameter]
+    [CascadingParameter(Name = "Year")]
     public int Year { get; set; }
 
     private IEnumerable<Owner> _owners = new List<Owner>();

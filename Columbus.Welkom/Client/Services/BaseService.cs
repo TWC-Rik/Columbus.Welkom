@@ -14,10 +14,10 @@ namespace Columbus.Welkom.Client.Services
 
         public T? GetStorage(int club, int year)
         {
-            string yearKey = GetStorageKey(club, year);
+            string key = GetStorageKey(club, year);
 
-            if (_storageService.ContainKey(yearKey))
-                return _storageService.GetItem<T>(yearKey);
+            if (_storageService.ContainKey(key))
+                return _storageService.GetItem<T>(key);
             else
                 return default;
         }
