@@ -1,11 +1,65 @@
 ﻿@page "/pigeonswap"
+@inject IOwnerService OwnerService
 
 <RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical">
     <RadzenText TextStyle="TextStyle.DisplayH6">
         Duivenwissel
     </RadzenText>
+
+    <RadzenButton ButtonStyle="ButtonStyle.Primary"
+                  Text="Koppel Toevoegen"
+                  Icon="playlist_add"
+                  Click="AddPigeonSwapPair" />
+
+    <RadzenDataGrid Data="_pigeonSwapPairs" EmptyText="Geen duivenwisselkoppels gevonden." @ref="_pigeonSwapGrid">
+        <Columns>
+            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Eigenaar">
+                <Template>
+                    <RadzenDropDown TValue="Owner" Data="_allOwners" @bind-Value="context.Owner" Style="width: 100%">
+                        <Template Context="possibleOwner">
+                            @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
+                        </Template>
+                    </RadzenDropDown>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Duif">
+                <Template>
+                    <RadzenDropDown TValue="Pigeon" Data="SelectablePigeons(context.Owner)" @bind-Value="context.Pigeon" Style="width: 100%" />
+                </Template>
+            </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Gekoppelde Liefhebber">
+                <Template>
+                    <RadzenDropDown TValue="Owner" Data="_allOwners" @bind-Value="context.CoupledOwner" Style="width: 100%">
+                        <Template Context="possibleOwner">
+                            @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
+                        </Template>
+                    </RadzenDropDown>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 </RadzenStack>
 
 @code {
+    [CascadingParameter(Name = "Club")]
+    public int Club { get; set; }
+    [CascadingParameter(Name = "Year")]
+    public int Year { get; set; }
 
+    private RadzenDataGrid<PigeonSwapPair> _pigeonSwapGrid = null!;
+    private IEnumerable<Owner> _allOwners = null!;
+    private IEnumerable<PigeonSwapPair> _pigeonSwapPairs = null!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        // Fetch swap pairs from storage
+        _pigeonSwapPairs = new List<PigeonSwapPair>();
+    }
+
+    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year) ?? new List<Pigeon>();
+
+    private void AddPigeonSwapPair() => _pigeonSwapGrid.InsertRow(new PigeonSwapPair());
 }

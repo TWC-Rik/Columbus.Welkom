@@ -6,7 +6,8 @@
         Ploegenspel
     </RadzenText>
 
-    <RadzenButton ButtonStyle="ButtonStyle.Success"
+    <RadzenButton ButtonStyle="ButtonStyle.Primary"
+                  Text="Ploeg Toevoegen"
                   Icon="playlist_add"
                   Click="AddTeam" />
 
@@ -15,7 +16,7 @@
             <RadzenDataGridColumn TItem="Team" Title="Puntentotaal" Property="TotalPoints" />
             <RadzenDataGridColumn TItem="Team" Title="Lid">
                 <Template>
-                    <RadzenDropDown TValue="Owner" Data="UnassignedOwners" @bind-Value="context.FirstOwner" Style="width: 100%">
+                    <RadzenDropDown TValue="Owner" Data="UnassignedOwners()" @bind-Value="context.FirstOwner" Style="width: 100%">
                         <Template Context="possibleOwner">
                             @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
                         </Template>
@@ -25,7 +26,7 @@
             <RadzenDataGridColumn TItem="Team" Title="Punten" Property="FirstOwnerPoints" />
             <RadzenDataGridColumn TItem="Team" Title="Lid">
                 <Template>
-                    <RadzenDropDown TValue="Owner" Data="UnassignedOwners" @bind-Value="context.SecondOwner" Style="width: 100%">
+                    <RadzenDropDown TValue="Owner" Data="UnassignedOwners()" @bind-Value="context.SecondOwner" Style="width: 100%">
                         <Template Context="possibleOwner">
                             @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
                         </Template>
@@ -35,7 +36,7 @@
             <RadzenDataGridColumn TItem="Team" Title="Punten" Property="SecondOwnerPoints" />
             <RadzenDataGridColumn TItem="Team" Title="Lid">
                 <Template>
-                    <RadzenDropDown TValue="Owner" Data="UnassignedOwners" @bind-Value="context.ThirdOwner" Style="width: 100%">
+                    <RadzenDropDown TValue="Owner" Data="UnassignedOwners()" @bind-Value="context.ThirdOwner" Style="width: 100%">
                         <Template Context="possibleOwner">
                             @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
                         </Template>
@@ -43,7 +44,7 @@
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="Team" Title="Punten" Property="ThirdOwnerPoints" />
-            <RadzenDataGridColumn TItem="Team">
+            <RadzenDataGridColumn TItem="Team" Width="50px">
                 <Template>
                     <RadzenButton ButtonStyle="ButtonStyle.Danger"
                                   Icon="delete"
@@ -72,7 +73,7 @@
         _teams = new List<Team>();
     }
 
-    private IEnumerable<Owner> UnassignedOwners => _allOwners.Where(o => !_teams.Any(t => t.OwnerIsInTeam(o)));
+    private IEnumerable<Owner> UnassignedOwners() => _allOwners.Where(o => !_teams.Any(t => t.OwnerIsInTeam(o)));
 
     private void AddTeam() => _teamsGrid.InsertRow(new Team());
     private void DeleteTeam(Team team) => _teams = _teams.Where(t => t != team);
