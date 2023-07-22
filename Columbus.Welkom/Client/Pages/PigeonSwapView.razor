@@ -66,7 +66,7 @@
         _pigeonSwapPairs = new List<PigeonSwapPair>();
     }
 
-    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year) ?? new List<Pigeon>();
+    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year - 2000) ?? new List<Pigeon>();
 
     private void AddPigeonSwapPair() => _pigeonSwapGrid.InsertRow(new PigeonSwapPair());
     private void DeletePigeonSwapPair(PigeonSwapPair pigeonSwapPair) => _pigeonSwapPairs = _pigeonSwapPairs.Where(p => p != pigeonSwapPair);
