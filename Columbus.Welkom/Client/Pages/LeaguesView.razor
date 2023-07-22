@@ -98,9 +98,9 @@
     private Leagues _leagues = null!;
     private IEnumerable<LeagueOwner> _allOwners = null!;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         _allOwners = OwnerService.GetStorage(Club, Year)?.Select(owner => new LeagueOwner(owner)) ?? new List<LeagueOwner>();
         _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<LeagueOwner>());

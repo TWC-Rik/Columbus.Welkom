@@ -27,13 +27,20 @@
                     <RadzenDropDown TValue="Pigeon" Data="SelectablePigeons(context.Owner)" @bind-Value="context.Pigeon" Style="width: 100%" />
                 </Template>
             </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Gekoppelde Liefhebber">
+            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Gekoppelde Liefhebber">
                 <Template>
                     <RadzenDropDown TValue="Owner" Data="_allOwners" @bind-Value="context.CoupledOwner" Style="width: 100%">
                         <Template Context="possibleOwner">
                             @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
                         </Template>
                     </RadzenDropDown>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonSwapPair" Width="50px">
+                <Template>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger"
+                                  Icon="delete"
+                                  Click="@(() => DeletePigeonSwapPair(context))" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -50,9 +57,9 @@
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<PigeonSwapPair> _pigeonSwapPairs = null!;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
         // Fetch swap pairs from storage
@@ -62,4 +69,5 @@
     private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year) ?? new List<Pigeon>();
 
     private void AddPigeonSwapPair() => _pigeonSwapGrid.InsertRow(new PigeonSwapPair());
+    private void DeletePigeonSwapPair(PigeonSwapPair pigeonSwapPair) => _pigeonSwapPairs = _pigeonSwapPairs.Where(p => p != pigeonSwapPair);
 }

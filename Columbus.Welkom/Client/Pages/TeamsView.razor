@@ -65,9 +65,9 @@
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<Team> _teams = null!;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
         _teams = new List<Team>();

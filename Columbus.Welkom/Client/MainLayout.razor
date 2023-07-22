@@ -15,7 +15,9 @@
         <RadzenStack>
             <RadzenNumeric Min="2016"
                            Max="@DateTime.Today.Year"
-                           @bind-Value="_selectedYear"
+                           TValue="int"
+                           Value="_selectedYear"
+                           Change=@(args => HandleYearChanged(args))
                            Placeholder="Jaar" />
             <RadzenNumeric Format="0000"
                            Placeholder="Vereniging"
@@ -51,6 +53,9 @@
 <RadzenTooltip />
 
 @code {
+    private const string LAST_SELECTED_CLUB = "LAST_SELECTED_CLUB";
+    private const string LAST_SELECTED_YEAR = "LAST_SELECTED_YEAR";
+
     private bool _sidebarExpanded = true;
     private int _selectedYear = DateTime.Today.Year;
     private int _selectedClub = 0;
@@ -59,13 +64,19 @@
     {
         base.OnInitialized();
 
-        _selectedClub = StorageService.GetItem<int>("LAST_SELECTED_CLUB");
+        _selectedClub = StorageService.GetItem<int>(LAST_SELECTED_CLUB);
+        _selectedYear = StorageService.GetItem<int>(LAST_SELECTED_YEAR);
     }
 
     private void HandleClubChanged(int club)
     {
         _selectedClub = club;
+        StorageService.SetItem(LAST_SELECTED_CLUB, _selectedClub);
+    }
 
-        StorageService.SetItem("LAST_SELECTED_CLUB", _selectedClub);
+    private void HandleYearChanged(int year)
+    {
+        _selectedYear = year;
+        StorageService.SetItem(LAST_SELECTED_YEAR, _selectedYear);
     }
 }

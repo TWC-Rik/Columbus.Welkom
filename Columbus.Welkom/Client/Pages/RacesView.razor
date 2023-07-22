@@ -49,9 +49,9 @@
     private IEnumerable<Race> _races = null!;
     private bool _isLoading = false;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         _races = RaceService.GetStorage(Club, Year) ?? new List<Race>();
     }

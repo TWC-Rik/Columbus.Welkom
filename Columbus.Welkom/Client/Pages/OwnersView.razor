@@ -16,8 +16,13 @@
 
     <RadzenDataGrid Data="_owners">
         <Columns>
-            <RadzenDataGridColumn TItem="Owner" Property="ID" />
-            <RadzenDataGridColumn TItem="Owner" Property="Name" />
+            <RadzenDataGridColumn TItem="Owner" Title="Lidnummer" Property="ID" />
+            <RadzenDataGridColumn TItem="Owner" Title="Naam" Property="Name" />
+            <RadzenDataGridColumn TItem="Owner" Title="Duiven">
+                <Template>
+                    @context.Pigeons.Count()
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 </RadzenStack>
@@ -30,9 +35,9 @@
 
     private IEnumerable<Owner> _owners = new List<Owner>();
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         _owners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
     }
@@ -42,7 +47,8 @@
         try
         {
             _owners = await OwnerService.ReadOwnersFromFile();
-        } catch (JSException)
+        }
+        catch (JSException)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
             return;

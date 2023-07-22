@@ -49,9 +49,9 @@
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<OwnerPigeonPair> _ownerPigeonPairs = null!;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
         // Fetch the owner/pigeon pairings from data.
@@ -59,7 +59,7 @@
     }
 
     private IEnumerable<Owner> SelectableOwners() => _allOwners.Where(o => _ownerPigeonPairs.All(opp => opp.Owner?.ID != o.ID));
-    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year - 1) ?? new List<Pigeon>();
+    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year - 2001) ?? new List<Pigeon>();
 
     private void AddOwnerPigeonPair() => _ownerPigeonGrid.InsertRow(new OwnerPigeonPair());
     private void DeleteOwnerPigeonPair(OwnerPigeonPair ownerPigeonPair) => _ownerPigeonPairs = _ownerPigeonPairs.Where(p => p != ownerPigeonPair);
