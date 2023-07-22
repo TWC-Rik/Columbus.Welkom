@@ -14,7 +14,7 @@
                   Icon="upload_file"
                   Click="ReadFile" />
 
-    <RadzenDataGrid Data="_owners">
+    <RadzenDataGrid Data="_owners" EmptyText="Geen leden gevonden.">
         <Columns>
             <RadzenDataGridColumn TItem="Owner" Title="Lidnummer" Property="ID" />
             <RadzenDataGridColumn TItem="Owner" Title="Naam" Property="Name" />

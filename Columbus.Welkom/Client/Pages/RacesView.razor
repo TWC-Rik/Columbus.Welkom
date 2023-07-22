@@ -13,7 +13,7 @@
                   Icon="drive_folder_upload"
                   Click="ReadDirectory" />
 
-    <RadzenDataGrid Data="_races" IsLoading="_isLoading">
+    <RadzenDataGrid Data="_races" IsLoading="_isLoading" EmptyText="Geen vluchten gevonden.">
         <Columns>
             <RadzenDataGridColumn TItem="Race" Property="Name" Title="Name" />
             <RadzenDataGridColumn TItem="Race" Title="Lengtegraad">
