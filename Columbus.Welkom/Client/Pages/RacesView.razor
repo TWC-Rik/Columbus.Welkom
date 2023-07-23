@@ -2,7 +2,7 @@
 @inject IRaceService RaceService
 @inject NotificationService NotificationService
 
-<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical">
+<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical" Visible="_selectedRace is null">
     <RadzenText TextStyle="TextStyle.DisplayH6">
         Vluchten
     </RadzenText>
@@ -15,7 +15,7 @@
 
     <RadzenDataGrid Data="_races" IsLoading="_isLoading" EmptyText="Geen vluchten gevonden.">
         <Columns>
-            <RadzenDataGridColumn TItem="Race" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Race" Property="Name" Title="Naam" />
             <RadzenDataGridColumn TItem="Race" Title="Lengtegraad">
                 <Template Context="race">
                     @Math.Round(race.Location.Longitude, 2)
@@ -28,17 +28,24 @@
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="Race" Title="Leden">
                 <Template Context="race">
-                    @race.OwnerRaces.Count()
+                    @race.OwnerRaces.Count
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="Race" Title="Duiven">
                 <Template Context="race">
-                    @race.PigeonRaces.Count()
+                    @race.PigeonRaces.Count
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Race" Width="50px">
+                <Template Context="race">
+                    <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="info" Click="(() => _selectedRace = race)" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 </RadzenStack>
+
+<DetailedRaceView Race="_selectedRace" Close="@(() => _selectedRace = null)" />
 
 @code {
     [CascadingParameter(Name = "Club")]
@@ -47,6 +54,7 @@
     public int Year { get; set; }
 
     private IEnumerable<Race> _races = null!;
+    private Race? _selectedRace;
     private bool _isLoading = false;
 
     protected override void OnParametersSet()

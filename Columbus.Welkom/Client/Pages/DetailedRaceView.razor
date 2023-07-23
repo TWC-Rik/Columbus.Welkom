@@ -1,0 +1,53 @@
+﻿<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical" Visible="Race is not null">
+    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.DisplayH6" TextAlign="TextAlign.Center">
+            @Race?.ToString()
+        </RadzenText>
+
+        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="arrow_back" Click="Close" />
+    </RadzenStack>
+
+    <RadzenDataGrid Data="Race?.PigeonRaces" EmptyText="Geen duiven in vlucht.">
+        <Columns>
+            <RadzenDataGridColumn TItem="PigeonRace" Property="Position" Title="Prs" Width="50px" />
+            <RadzenDataGridColumn TItem="PigeonRace" Property="Next" Title="Vlg" Width="50px" />
+            <RadzenDataGridColumn TItem="PigeonRace" Title="Naam">
+                <Template>
+                    @GetOwnerRace(context).Owner.Name
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonRace" Title="Mee" Width="50px">
+                <Template>
+                    @GetOwnerRace(context).Count
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonRace" Property="Mark" Title="Get" Width="50px" />
+            <RadzenDataGridColumn TItem="PigeonRace" Title="Afstand">
+                <Template>
+                    @Math.Round(GetOwnerRace(context).Distance / 1000, 3)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonRace" Property="Pigeon" Title="Ringnummer">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonRace" Title="Zuiver">
+                <Template>
+                    @context.ArrivalTime.ToString("HH:mm:ss")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonRace" Title="Snelheid">
+                <Template>
+                    @Math.Round(context.Speed?? 0, 3)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PigeonRace" Property="Points" Title="Punten" Width="100px" />
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter, EditorRequired]
+    public Race? Race { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback Close { get; set; }
+
+    private OwnerRace GetOwnerRace(PigeonRace pigeonRace) => Race!.OwnerRaces.First(or => or.Owner.Pigeons.Contains(pigeonRace.Pigeon));
