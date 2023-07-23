@@ -51,3 +51,4 @@
     public EventCallback Close { get; set; }
 
     private OwnerRace GetOwnerRace(PigeonRace pigeonRace) => Race!.OwnerRaces.First(or => or.Owner.Pigeons.Contains(pigeonRace.Pigeon));
+}

@@ -1,11 +1,84 @@
 ﻿@page "/selectedyoungpigeon"
+@inject IOwnerService OwnerService
+@inject IRaceService RaceService
 
 <RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical">
     <RadzenText TextStyle="TextStyle.DisplayH6">
         Knaakduif
     </RadzenText>
+
+    <RadzenButton ButtonStyle="ButtonStyle.Primary"
+                  Text="Lid Toevoegen"
+                  Icon="playlist_add"
+                  Click="AddOwnerPigeonPair" />
+
+    <RadzenDataGrid Data="_ownerPigeonPairs" EmptyText="Geen knaakduiven gevonden." @ref="_ownerPigeonGrid">
+        <Columns>
+            <RadzenDataGridColumn TItem="OwnerPigeonPair" Title="Lid">
+                <Template>
+                    <RadzenDropDown TValue="Owner"
+                                    Data="SelectableOwners()"
+                                    @bind-Value="context.Owner"
+                                    Style="width: 100%">
+                        <Template Context="possibleOwner">
+                            @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
+                        </Template>
+                    </RadzenDropDown>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="OwnerPigeonPair" Title="Duif">
+                <Template>
+                    <RadzenDropDown TValue="Pigeon"
+                                    Data="SelectablePigeons(context.Owner)"
+                                    Change="@(() => CalculatePairPoints(context))"
+                                    @bind-Value="context.Pigeon"
+                                    Style="width: 100%" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="OwnerPigeonPair" Title="Punten" Property="Points" />
+            <RadzenDataGridColumn TItem="OwnerPigeonPair" Width="50px">
+                <Template>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger"
+                                  Icon="delete"
+                                  Click="@(() => DeleteOwnerPigeonPair(context))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 </RadzenStack>
 
 @code {
+    [CascadingParameter(Name = "Club")]
+    public int Club { get; set; }
+    [CascadingParameter(Name = "Year")]
+    public int Year { get; set; }
 
+    private RadzenDataGrid<OwnerPigeonPair> _ownerPigeonGrid = null!;
+    private IEnumerable<Race> _allRaces = null!;
+    private IEnumerable<Owner> _allOwners = null!;
+    private IEnumerable<OwnerPigeonPair> _ownerPigeonPairs = null!;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        _allRaces = RaceService.GetStorage(Club, Year) ?? new List<Race>();
+        _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        // Fetch the owner/pigeon pairings from data.
+        _ownerPigeonPairs = new List<OwnerPigeonPair>();
+
+        foreach (OwnerPigeonPair ownerPigeonPair in _ownerPigeonPairs)
+            CalculatePairPoints(ownerPigeonPair);
+    }
+
+    private IEnumerable<Owner> SelectableOwners() => _allOwners.Where(o => _ownerPigeonPairs.All(opp => opp.Owner?.ID != o.ID));
+    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year - 2000) ?? new List<Pigeon>();
+
+    private void AddOwnerPigeonPair() => _ownerPigeonGrid.InsertRow(new OwnerPigeonPair());
+    private void DeleteOwnerPigeonPair(OwnerPigeonPair ownerPigeonPair) => _ownerPigeonPairs = _ownerPigeonPairs.Where(p => p != ownerPigeonPair);
+
+    private void CalculatePairPoints(OwnerPigeonPair ownerPigeonPair)
+    {
+        ownerPigeonPair.Points = _allRaces.Sum(r => r.PigeonRaces.FirstOrDefault(pr => pr.Pigeon == ownerPigeonPair.Pigeon)?.Points) ?? 0;
+    }
 }

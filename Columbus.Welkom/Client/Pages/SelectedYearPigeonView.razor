@@ -15,7 +15,10 @@
         <Columns>
             <RadzenDataGridColumn TItem="OwnerPigeonPair" Title="Lid">
                 <Template>
-                    <RadzenDropDown TValue="Owner" Data="SelectableOwners()" @bind-Value="context.Owner" Style="width: 100%">
+                    <RadzenDropDown TValue="Owner"
+                                    Data="SelectableOwners()"
+                                    @bind-Value="context.Owner"
+                                    Style="width: 100%">
                         <Template Context="possibleOwner">
                             @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
                         </Template>
@@ -24,7 +27,10 @@
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="OwnerPigeonPair" Title="Duif">
                 <Template>
-                    <RadzenDropDown TValue="Pigeon" Data="SelectablePigeons(context.Owner)" @bind-Value="context.Pigeon" Style="width: 100%" />
+                    <RadzenDropDown TValue="Pigeon"
+                                    Data="SelectablePigeons(context.Owner)"
+                                    @bind-Value="context.Pigeon"
+                                    Style="width: 100%" />
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="OwnerPigeonPair" Title="Punten" Property="Points" />
