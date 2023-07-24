@@ -18,6 +18,7 @@
                     <RadzenDropDown TValue="Owner"
                                     Data="SelectableOwners()"
                                     @bind-Value="context.Owner"
+                                    Change="context.ResetOnOwnerChange"
                                     Style="width: 100%">
                         <Template Context="possibleOwner">
                             @((possibleOwner as Owner)!.ID): @((possibleOwner as Owner)!.Name)
@@ -65,7 +66,15 @@
     }
 
     private IEnumerable<Owner> SelectableOwners() => _allOwners.Where(o => _ownerPigeonPairs.All(opp => opp.Owner?.ID != o.ID));
-    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons.Where(p => p.Year == Year - 2001) ?? new List<Pigeon>();
+    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner)
+    {
+        if (owner is null)
+            return Enumerable.Empty<Pigeon>();
+
+        return owner.Pigeons.Where(p => p.Year == Year - 2001)
+            .OrderBy(p => p.Year)
+            .ThenBy(p => p.RingNumber);
+    }
 
     private void AddOwnerPigeonPair() => _ownerPigeonGrid.InsertRow(new OwnerPigeonPair());
     private void DeleteOwnerPigeonPair(OwnerPigeonPair ownerPigeonPair) => _ownerPigeonPairs = _ownerPigeonPairs.Where(p => p != ownerPigeonPair);

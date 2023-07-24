@@ -25,5 +25,11 @@ namespace Columbus.Welkom.Client.Models
         public Owner? Owner { get; set; }
         public Pigeon? Pigeon { get; set; }
         public int Points { get; set; }
+
+        public void ResetOnOwnerChange()
+        {
+            Pigeon = null;
+            Points = 0;
+        }
     }
 }
