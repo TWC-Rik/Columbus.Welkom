@@ -20,7 +20,7 @@ jobs:
               uses: actions/checkout@v2
               with:
                 repository: TWC-Rik/Columbus
-                path: ../../Columbus/
+                path: ../Columbus/
                 ref: main
 
             - name: Publish .NET Core Project
