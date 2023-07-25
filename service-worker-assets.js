@@ -9,7 +9,7 @@
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-Y7TVMaQj3pJoTgTMugsyizjqLpCMsJS2kPfv6JtPVnM=",
+      "hash": "sha256-G7b5yIl2uujOooeggEzG1j1fxGbByEIx1MmrFjcmh0M=",
       "url": "index.html"
     },
     {
@@ -465,5 +465,5 @@
       "url": "_content\/Radzen.Blazor\/Radzen.Blazor.js"
     }
   ],
-  "version": "fotykDeB"
+  "version": "UyykPSKb"
 };
