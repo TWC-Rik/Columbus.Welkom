@@ -5,16 +5,19 @@ using KristofferStrube.Blazor.FileSystem;
 using KristofferStrube.Blazor.FileSystemAccess;
 using Columbus.Welkom.Client.Services.Interfaces;
 using Blazored.LocalStorage;
+using Columbus.Welkom.Client.Repositories.Interfaces;
 
 namespace Columbus.Welkom.Client.Services
 {
     public class OwnerService : BaseService<IEnumerable<Owner>>, IOwnerService
     {
         private readonly IFileSystemAccessService _fileSystemAccessService;
+        private readonly IPigeonRepository _pigeonRepository;
 
-        public OwnerService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService): base(localStorageService)
+        public OwnerService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService, IPigeonRepository pigeonRepository): base(localStorageService)
         {
             _fileSystemAccessService = fileSystemAccessService;
+            _pigeonRepository = pigeonRepository;
         }
 
         public async Task<IEnumerable<Owner>> ReadOwnersFromFile()
@@ -38,6 +41,16 @@ namespace Columbus.Welkom.Client.Services
             {
                 throw;
             }
+        }
+
+        public async Task AddOwnerPigeonsAsync(Owner owner)
+        {
+            await _pigeonRepository.AddRangeAsync(owner.Pigeons);
+        }
+
+        public async Task<IEnumerable<Pigeon>> GetAllPigeonsAsync()
+        {
+            return await _pigeonRepository.GetAllAsync();
         }
 
         protected override string GetStorageKey(int club, int year) => $"OWNERS_{club}_{year}";

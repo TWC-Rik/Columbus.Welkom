@@ -23,6 +23,13 @@
                     @context.Pigeons.Count()
                 </Template>
             </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Owner">
+                <Template>
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Text="Store" Click="(() => OwnerService.AddOwnerPigeonsAsync(context))" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Retrieve" Click="(async () => context.Pigeons = await OwnerService.GetAllPigeonsAsync())" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Clear" Click="context.ClearPigeons" />
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 </RadzenStack>
