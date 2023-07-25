@@ -15,13 +15,6 @@ jobs:
               with:
                   dotnet-version: 7.x
                   include-prerelease: true
-                  
-            - name: Clone Columbus.Models
-              uses: actions/checkout@v2
-              with:
-                repository: TWC-Rik/Columbus
-                path: ../Columbus/
-                ref: main
 
             - name: Publish .NET Core Project
               run: dotnet publish Columbus.Welkom/Client/Columbus.Welkom.Client.csproj -c Release -o release --nologo
