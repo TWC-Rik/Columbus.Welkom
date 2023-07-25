@@ -10,23 +10,11 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
-            - name: Checkout Columbus
-              uses: actions/checkout@v2
-              with:
-                repository: TWC-Rik/Columbus
-                ref: main
-
             - name: Setup .NET Core SDK
               uses: actions/setup-dotnet@v1
               with:
                   dotnet-version: 7.x
                   include-prerelease: true
-                  
-            - name: Build Columbus.Models
-              run: dotnet build Columbus/Columbus.Models/Columbus.Models.csproj --configuration Release
-              
-            - name: Build Columbus.UDP
-              run: dotnet build Columbus/Columbus.UDP/Columbus.UDP.csproj --configuration Release
 
             - name: Publish Columbus.Welkom
               run: dotnet publish Columbus.Welkom/Client/Columbus.Welkom.Client.csproj -c Release -o release --nologo
