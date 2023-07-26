@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+    <PackageReference Include="Columbus.Models" Version="0.1.0" />
+    <PackageReference Include="Columbus.UDP" Version="0.1.0" />
     <PackageReference Include="KristofferStrube.Blazor.FileSystemAccess" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.2" PrivateAssets="all" />
@@ -22,10 +24,5 @@
     <PackageReference Include="Radzen.Blazor" Version="4.14.1" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.5" />
     <PackageReference Include="SqliteWasmHelper" Version="1.1.1-beta-gd0df7e5d62" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Columbus\Columbus.Models\Columbus.Models.csproj" />
-    <ProjectReference Include="..\..\..\Columbus\Columbus.UDP\Columbus.UDP.csproj" />
   </ItemGroup>
 </Project>
