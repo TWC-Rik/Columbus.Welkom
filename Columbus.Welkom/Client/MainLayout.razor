@@ -1,6 +1,7 @@
 ﻿@using Blazored.LocalStorage;
 @inherits LayoutComponentBase
-@inject ISyncLocalStorageService StorageService;
+@inject ISyncLocalStorageService StorageService
+@inject NavigationManager NavigationManager
 
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
     <RadzenHeader>
@@ -27,13 +28,13 @@
                            ShowUpDown="false" />
 
             <RadzenPanelMenu>
-                <RadzenPanelMenuItem Text="Leden" Path="" Icon="manage_accounts" />
-                <RadzenPanelMenuItem Text="Vluchten" Path="races" Icon="calendar_month" />
-                <RadzenPanelMenuItem Text="Tientjesduif" Path="selectedyearpigeon" Icon="hotel_class" />
-                <RadzenPanelMenuItem Text="Knaakduif" Path="selectedyoungpigeon" Icon="star" />
-                <RadzenPanelMenuItem Text="Ploegenspel" Path="teams" Icon="groups" />
-                <RadzenPanelMenuItem Text="Divisiespel" Path="leagues" Icon="format_list_numbered" />
-                <RadzenPanelMenuItem Text="Duivenwissel" Path="pigeonswap" Icon="autorenew" />
+                <RadzenPanelMenuItem Text="Leden" Path="/" Icon="manage_accounts" />
+                <RadzenPanelMenuItem Text="Vluchten" Path="/races" Icon="calendar_month" />
+                <RadzenPanelMenuItem Text="Tientjesduif" Path="/selectedyearpigeon" Icon="hotel_class" />
+                <RadzenPanelMenuItem Text="Knaakduif" Path="/selectedyoungpigeon" Icon="star" />
+                <RadzenPanelMenuItem Text="Ploegenspel" Path="/teams" Icon="groups" />
+                <RadzenPanelMenuItem Text="Divisiespel" Path="/leagues" Icon="format_list_numbered" />
+                <RadzenPanelMenuItem Text="Duivenwissel" Path="/pigeonswap" Icon="autorenew" />
             </RadzenPanelMenu>
         </RadzenStack>
 
@@ -72,6 +73,7 @@
     {
         _selectedClub = club;
         StorageService.SetItem(LAST_SELECTED_CLUB, _selectedClub);
+        Console.WriteLine(NavigationManager.Uri);
     }
 
     private void HandleYearChanged(int year)
