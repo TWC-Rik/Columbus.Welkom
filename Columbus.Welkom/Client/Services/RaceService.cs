@@ -8,12 +8,11 @@ using System.Text;
 
 namespace Columbus.Welkom.Client.Services
 {
-    public class RaceService : BaseService<IEnumerable<Race>>, IRaceService
+    public class RaceService : IRaceService
     {
         private readonly IFileSystemAccessService _fileSystemAccessService;
-        private const string RACES_KEY = "RACES_";
 
-        public RaceService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService) : base(localStorageService)
+        public RaceService(IFileSystemAccessService fileSystemAccessService)
         {
             _fileSystemAccessService = fileSystemAccessService;
         }
@@ -74,7 +73,5 @@ namespace Columbus.Welkom.Client.Services
             RaceReader raceReader = new RaceReader(udpContent);
             return raceReader.GetRace();
         }
-
-        protected override string GetStorageKey(int club, int year) => $"{RACES_KEY}{year}";
     }
 }

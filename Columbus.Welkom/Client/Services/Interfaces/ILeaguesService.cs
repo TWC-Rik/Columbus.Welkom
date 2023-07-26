@@ -2,7 +2,7 @@
 
 namespace Columbus.Welkom.Client.Services.Interfaces
 {
-    public interface ILeaguesService: IBaseService<Leagues>
+    public interface ILeaguesService
     {
 
     }

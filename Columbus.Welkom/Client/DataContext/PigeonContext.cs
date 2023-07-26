@@ -1,4 +1,4 @@
-﻿using Columbus.Models;
+﻿using Columbus.Welkom.Client.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Columbus.Welkom.Client.DataContext
@@ -7,6 +7,6 @@ namespace Columbus.Welkom.Client.DataContext
     {
         public PigeonContext(DbContextOptions<PigeonContext> opts) : base(opts) { }
 
-        public DbSet<Pigeon> Pigeons { get; set; }
+        public DbSet<PigeonEntity> Pigeons { get; set; }
     }
 }

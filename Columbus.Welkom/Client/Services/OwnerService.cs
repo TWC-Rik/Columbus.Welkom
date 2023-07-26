@@ -9,12 +9,12 @@ using Columbus.Welkom.Client.Repositories.Interfaces;
 
 namespace Columbus.Welkom.Client.Services
 {
-    public class OwnerService : BaseService<IEnumerable<Owner>>, IOwnerService
+    public class OwnerService : IOwnerService
     {
         private readonly IFileSystemAccessService _fileSystemAccessService;
         private readonly IPigeonRepository _pigeonRepository;
 
-        public OwnerService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService, IPigeonRepository pigeonRepository): base(localStorageService)
+        public OwnerService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService, IPigeonRepository pigeonRepository)
         {
             _fileSystemAccessService = fileSystemAccessService;
             _pigeonRepository = pigeonRepository;
@@ -43,16 +43,6 @@ namespace Columbus.Welkom.Client.Services
             }
         }
 
-        public async Task AddOwnerPigeonsAsync(Owner owner)
-        {
-            await _pigeonRepository.AddRangeAsync(owner.Pigeons);
-        }
-
-        public async Task<IEnumerable<Pigeon>> GetAllPigeonsAsync()
-        {
-            return await _pigeonRepository.GetAllAsync();
-        }
-
-        protected override string GetStorageKey(int club, int year) => $"OWNERS_{club}_{year}";
+        public void AddOwners(IEnumerable<Owner> owners, int year) { }
     }
 }

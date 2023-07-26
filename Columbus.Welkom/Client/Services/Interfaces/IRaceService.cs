@@ -2,7 +2,7 @@
 
 namespace Columbus.Welkom.Client.Services.Interfaces
 {
-    public interface IRaceService : IBaseService<IEnumerable<Race>>
+    public interface IRaceService
     {
         Task<IEnumerable<Race>> ReadRacesFromDirectory();
     }
