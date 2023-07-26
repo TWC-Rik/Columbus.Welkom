@@ -49,7 +49,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-W9gurOzOgXx8dzZAfaWrzdFPYQviC4w9TYlKjwtWTwg=",
+      "hash": "sha256-2a1QTkMuKPOeB+c5m6W1QkX3H4Z7UfZe2T1LxGtSVkE=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -65,7 +65,7 @@
       "url": "_framework\/Columbus.UDP.dll"
     },
     {
-      "hash": "sha256-SAxya63q3TWAHXeZHAmk2RLUAHwPdsRV\/MbPXjqY2WI=",
+      "hash": "sha256-LOoznPLQBjZWbZpnUnZ4irI94p3BzBJDxPIf9GZZAYY=",
       "url": "_framework\/Columbus.Welkom.Client.dll"
     },
     {
@@ -193,7 +193,7 @@
       "url": "_framework\/System.ComponentModel.TypeConverter.dll"
     },
     {
-      "hash": "sha256-sAObo16qQcqqirwqeDE6cRy0R671gzia3IiGtlWYUWs=",
+      "hash": "sha256-+oIJMc5uFjMpZJDUR9yAGmxKHZPu3MG8MnWoK0r+eZY=",
       "url": "_framework\/System.Console.dll"
     },
     {
@@ -245,7 +245,7 @@
       "url": "_framework\/System.ObjectModel.dll"
     },
     {
-      "hash": "sha256-UuaTP0W1XsqAW2BLQ3e4V53zosJsyZvN1yzhn3ALvQ8=",
+      "hash": "sha256-+BvV6rR9pJ9gCqQ3STXQxbJ4FcRXSRls98WKP9Z0OBg=",
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
@@ -465,5 +465,5 @@
       "url": "_content\/Radzen.Blazor\/Radzen.Blazor.js"
     }
   ],
-  "version": "IExqdvCc"
+  "version": "1oARDwAO"
 };
