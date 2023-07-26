@@ -81,13 +81,5 @@
         StorageService.SetItem(LAST_SELECTED_YEAR, _selectedYear);
     }
 
-    private string GetPath(string endRoute)
-    {
-        Console.WriteLine(NavigationManager.BaseUri);
-        Console.WriteLine(NavigationManager.BaseUri.Contains("twc-rik.github.io"));
-
-        string result = NavigationManager.BaseUri.Contains("twc-rik.github.io") ? $"/Columbus.Welkom/{endRoute}" : endRoute;
-
-        return result;
-    }
+    private string GetPath(string endRoute) => NavigationManager.BaseUri.Contains("twc-rik.github.io") ? $"/Columbus.Welkom{endRoute}" : endRoute;
 }
