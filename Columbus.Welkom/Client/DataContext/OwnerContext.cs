@@ -13,10 +13,12 @@ namespace Columbus.Welkom.Client.DataContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<OwnerEntity>().ToTable("Owner");
+            modelBuilder.Entity<OwnerEntity>().ToTable("owner");
             modelBuilder.Entity<OwnerEntity>().HasKey(e => e.Id);
             modelBuilder.Entity<OwnerEntity>().HasIndex(e => e.Year);
-            modelBuilder.Entity<OwnerEntity>().HasMany(o => o.Pigeons);
+            modelBuilder.Entity<OwnerEntity>().HasMany(e => e.Pigeons)
+                .WithOne(e => e.Owner)
+                .HasForeignKey(e => e.OwnerId);
         }
     }
 }

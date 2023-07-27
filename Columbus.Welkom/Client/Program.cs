@@ -27,10 +27,18 @@ builder.Services.AddScoped<ContextMenuService>();
 // DataContext
 builder.Services.AddSqliteWasmDbContextFactory<PigeonContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
 builder.Services.AddSqliteWasmDbContextFactory<OwnerContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<PigeonRaceContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<RaceContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<LeagueContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<PigeonSwapContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<SelectedYearPigeonContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<SelectedYoungPigeonContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<TeamContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
 
 // Repositories
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IPigeonRepository, PigeonRepository>();
+builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 
 //Services
 builder.Services.AddScoped<ILeaguesService, LeaguesService>();

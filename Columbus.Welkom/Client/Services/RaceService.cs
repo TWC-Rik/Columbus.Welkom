@@ -1,6 +1,8 @@
-﻿using Blazored.LocalStorage;
-using Columbus.Models;
+﻿using Columbus.Models;
 using Columbus.UDP;
+using Columbus.Welkom.Client.Models.Entities;
+using Columbus.Welkom.Client.Repositories;
+using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Services.Interfaces;
 using KristofferStrube.Blazor.FileSystem;
 using KristofferStrube.Blazor.FileSystemAccess;
@@ -11,10 +13,12 @@ namespace Columbus.Welkom.Client.Services
     public class RaceService : IRaceService
     {
         private readonly IFileSystemAccessService _fileSystemAccessService;
+        private readonly IRaceRepository _raceRepository;
 
-        public RaceService(IFileSystemAccessService fileSystemAccessService)
+        public RaceService(IFileSystemAccessService fileSystemAccessService, IRaceRepository raceRepository)
         {
             _fileSystemAccessService = fileSystemAccessService;
+            _raceRepository = raceRepository;
         }
 
         public async Task<IEnumerable<Race>> ReadRacesFromDirectory()
@@ -72,6 +76,20 @@ namespace Columbus.Welkom.Client.Services
 
             RaceReader raceReader = new RaceReader(udpContent);
             return raceReader.GetRace();
+        }
+
+        public async Task<IEnumerable<Race>> GetAllRacesByYear(int year)
+        {
+            IEnumerable<RaceEntity> races = await _raceRepository.GetAllByYearAsync(year);
+
+            return races.Select(r => r.ToRace());
+        }
+
+        public async Task OverwriteRaces(IEnumerable<Race> races, int year)
+        {
+            await _raceRepository.DeleteRangeByYearAsync(year);
+
+            await _raceRepository.AddRangeAsync(races.Select(r => new RaceEntity(r)));
         }
     }
 }

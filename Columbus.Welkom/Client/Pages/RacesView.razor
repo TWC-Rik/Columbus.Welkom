@@ -57,11 +57,11 @@
     private Race? _selectedRace;
     private bool _isLoading = false;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
+        await base.OnParametersSetAsync();
 
-        //_races = RaceService.GetStorage(Club, Year) ?? new List<Race>();
+        _races = await RaceService.GetAllRacesByYear(Year);
     }
 
     private async Task ReadDirectory()
@@ -77,7 +77,7 @@
             return;
         }
 
-        //RaceService.SetStorage(_races, Club, Year);
+        await RaceService.OverwriteRaces(_races, Year);
         _isLoading = false;
     }
 }

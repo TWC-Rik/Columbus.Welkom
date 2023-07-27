@@ -53,32 +53,14 @@ namespace Columbus.Welkom.Client.Services
         {
             IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearAsync(year);
 
-            return owners.Select(ConvertToOwner);
+            return owners.Select(o => o.ToOwner());
         }
 
         public async Task OverwriteOwnersAsync(IEnumerable<Owner> owners, int year)
         {
             await _ownerRepository.DeleteRangeByYearAsync(year);
 
-            await _ownerRepository.AddRangeAsync(owners.Select(o => ConvertToEntity(o, year)));
-        }
-
-        private static OwnerEntity ConvertToEntity(Owner owner, int year)
-        {
-            return new OwnerEntity()
-            {
-                Id = owner.ID,
-                Year = year,
-                Name = owner.Name,
-                Latitude = owner.Coordinate?.Lattitude ?? 0,
-                Longitude = owner.Coordinate?.Longitude ?? 0,
-                Club = owner.Club
-            };
-        }
-
-        private static Owner ConvertToOwner(OwnerEntity owner)
-        {
-            return new Owner(owner.Id, owner.Name, new Coordinate(owner.Longitude, owner.Latitude), owner.Club);
+            await _ownerRepository.AddRangeAsync(owners.Select(o => new OwnerEntity(o, year)));
         }
     }
 }

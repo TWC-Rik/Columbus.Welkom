@@ -65,11 +65,11 @@
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<Team> _teams = null!;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
+        await base.OnParametersSetAsync();
 
-        //_allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        _allOwners = await OwnerService.GetOwnersByYearAsync(Year);
         _teams = new List<Team>();
     }
 

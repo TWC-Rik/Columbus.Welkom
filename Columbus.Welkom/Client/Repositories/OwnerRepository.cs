@@ -28,6 +28,7 @@ namespace Columbus.Welkom.Client.Repositories
             using OwnerContext context = await _factory.CreateDbContextAsync();
 
             return await context.Owners.Where(o => o.Year == year)
+                .Include(o => o.Pigeons)
                 .ToListAsync();
         }
 
