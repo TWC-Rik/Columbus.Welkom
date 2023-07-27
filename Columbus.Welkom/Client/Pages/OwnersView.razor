@@ -35,11 +35,11 @@
 
     private IEnumerable<Owner> _owners = new List<Owner>();
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
+        await base.OnParametersSetAsync();
 
-        _owners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        _owners = await OwnerService.GetOwnersByYearAsync(Year);
     }
 
     private async Task ReadFile()
@@ -54,6 +54,6 @@
             return;
         }
 
-        OwnerService.AddOwners(_owners, Club, Year);
+        await OwnerService.OverwriteOwnersAsync(_owners, Year);
     }
 }

@@ -61,7 +61,7 @@
     {
         base.OnParametersSet();
 
-        _races = RaceService.GetStorage(Club, Year) ?? new List<Race>();
+        //_races = RaceService.GetStorage(Club, Year) ?? new List<Race>();
     }
 
     private async Task ReadDirectory()
@@ -77,7 +77,7 @@
             return;
         }
 
-        RaceService.SetStorage(_races, Club, Year);
+        //RaceService.SetStorage(_races, Club, Year);
         _isLoading = false;
     }
 }

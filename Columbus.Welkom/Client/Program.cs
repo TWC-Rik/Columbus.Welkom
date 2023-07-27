@@ -25,9 +25,11 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
 // DataContext
-builder.Services.AddSqliteWasmDbContextFactory<PigeonContext>(opts => opts.UseSqlite("Data Source=pigeons.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<PigeonContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
+builder.Services.AddSqliteWasmDbContextFactory<OwnerContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
 
 // Repositories
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IPigeonRepository, PigeonRepository>();
 
 //Services

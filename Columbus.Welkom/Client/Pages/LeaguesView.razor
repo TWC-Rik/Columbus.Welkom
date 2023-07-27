@@ -102,7 +102,7 @@
     {
         base.OnParametersSet();
 
-        _allOwners = OwnerService.GetStorage(Club, Year)?.Select(owner => new LeagueOwner(owner)) ?? new List<LeagueOwner>();
-        _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<LeagueOwner>());
+        //_allOwners = OwnerService.GetStorage(Club, Year)?.Select(owner => new LeagueOwner(owner)) ?? new List<LeagueOwner>();
+        //_leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<LeagueOwner>());
     }
 }

@@ -60,7 +60,7 @@
     {
         base.OnParametersSet();
 
-        _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        //_allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
         // Fetch the owner/pigeon pairings from data.
         _ownerPigeonPairs = new List<OwnerPigeonPair>();
     }

@@ -1,11 +1,12 @@
 ﻿using Columbus.Models;
 using Columbus.Welkom.Client.DataContext;
+using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Columbus.Welkom.Client.Repositories
 {
-    public class PigeonRepository : IBaseRepository<Pigeon>, IPigeonRepository
+    public class PigeonRepository : IPigeonRepository
     {
         private readonly PigeonContext _dbContext;
 
@@ -14,21 +15,9 @@ namespace Columbus.Welkom.Client.Repositories
             _dbContext = context;
         }
 
-        public async Task<IEnumerable<Pigeon>> GetAllAsync()
+        public async Task AddRangeAsync(IEnumerable<PigeonEntity> pigeons)
         {
-            return await _dbContext.Pigeons.ToListAsync();
-        }
-
-        public async Task AddAsync(Pigeon pigeon)
-        {
-            _dbContext.Pigeons.Add(pigeon);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task AddRangeAsync(IEnumerable<Pigeon> pigeons)
-        {
-            _dbContext.Pigeons.AddRange(pigeons);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.AddRangeAsync(pigeons);
         }
     }
 }

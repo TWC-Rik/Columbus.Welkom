@@ -63,8 +63,8 @@
     {
         base.OnParametersSet();
 
-        _allRaces = RaceService.GetStorage(Club, Year) ?? new List<Race>();
-        _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        //_allRaces = RaceService.GetStorage(Club, Year) ?? new List<Race>();
+        //_allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
         // Fetch the owner/pigeon pairings from data.
         _ownerPigeonPairs = new List<OwnerPigeonPair>();
 

@@ -8,5 +8,7 @@
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public int Club { get; set; }
+
+        public IEnumerable<PigeonEntity>? Pigeons { get; set; }
     }
 }

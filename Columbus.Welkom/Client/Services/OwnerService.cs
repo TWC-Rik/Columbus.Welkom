@@ -6,17 +6,23 @@ using KristofferStrube.Blazor.FileSystemAccess;
 using Columbus.Welkom.Client.Services.Interfaces;
 using Blazored.LocalStorage;
 using Columbus.Welkom.Client.Repositories.Interfaces;
+using Columbus.Welkom.Client.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using Columbus.Welkom.Client.DataContext;
+using SqliteWasmHelper;
 
 namespace Columbus.Welkom.Client.Services
 {
     public class OwnerService : IOwnerService
     {
         private readonly IFileSystemAccessService _fileSystemAccessService;
+        private readonly IOwnerRepository _ownerRepository;
         private readonly IPigeonRepository _pigeonRepository;
 
-        public OwnerService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService, IPigeonRepository pigeonRepository)
+        public OwnerService(IFileSystemAccessService fileSystemAccessService, ISyncLocalStorageService localStorageService, IOwnerRepository ownerRepository, IPigeonRepository pigeonRepository)
         {
             _fileSystemAccessService = fileSystemAccessService;
+            _ownerRepository = ownerRepository;
             _pigeonRepository = pigeonRepository;
         }
 
@@ -43,6 +49,36 @@ namespace Columbus.Welkom.Client.Services
             }
         }
 
-        public void AddOwners(IEnumerable<Owner> owners, int year) { }
+        public async Task<IEnumerable<Owner>> GetOwnersByYearAsync(int year)
+        {
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearAsync(year);
+
+            return owners.Select(ConvertToOwner);
+        }
+
+        public async Task OverwriteOwnersAsync(IEnumerable<Owner> owners, int year)
+        {
+            await _ownerRepository.DeleteRangeByYearAsync(year);
+
+            await _ownerRepository.AddRangeAsync(owners.Select(o => ConvertToEntity(o, year)));
+        }
+
+        private static OwnerEntity ConvertToEntity(Owner owner, int year)
+        {
+            return new OwnerEntity()
+            {
+                Id = owner.ID,
+                Year = year,
+                Name = owner.Name,
+                Latitude = owner.Coordinate?.Lattitude ?? 0,
+                Longitude = owner.Coordinate?.Longitude ?? 0,
+                Club = owner.Club
+            };
+        }
+
+        private static Owner ConvertToOwner(OwnerEntity owner)
+        {
+            return new Owner(owner.Id, owner.Name, new Coordinate(owner.Longitude, owner.Latitude), owner.Club);
+        }
     }
 }
