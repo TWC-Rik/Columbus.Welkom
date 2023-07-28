@@ -1,5 +1,4 @@
-﻿using Columbus.Welkom.Client.DataContext;
-using Columbus.Welkom.Client.Models.Entities;
+﻿using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SqliteWasmHelper;
@@ -8,21 +7,24 @@ namespace Columbus.Welkom.Client.Repositories
 {
     public class RaceRepository : IRaceRepository
     {
-        private readonly ISqliteWasmDbContextFactory<RaceContext> _factory;
+        private readonly ISqliteWasmDbContextFactory<DataContext> _factory;
 
-        public RaceRepository(ISqliteWasmDbContextFactory<RaceContext> factory)
+        public RaceRepository(ISqliteWasmDbContextFactory<DataContext> factory)
         {
             _factory = factory;
         }
 
-        public Task AddRangeAsync(IEnumerable<RaceEntity> entities)
+        public async Task AddRangeAsync(IEnumerable<RaceEntity> entities)
         {
-            throw new NotImplementedException();
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            context.Races.AddRange(entities);
+            await context.SaveChangesAsync();
         }
 
         public async Task<int> DeleteRangeByYearAsync(int year)
         {
-            using RaceContext context = await _factory.CreateDbContextAsync();
+            using DataContext context = await _factory.CreateDbContextAsync();
 
             return await context.Races.Where(r => r.StartTime.Year == year)
                 .ExecuteDeleteAsync();
@@ -30,11 +32,20 @@ namespace Columbus.Welkom.Client.Repositories
 
         public async Task<IEnumerable<RaceEntity>> GetAllByYearAsync(int year)
         {
-            using RaceContext context = await _factory.CreateDbContextAsync();
+            using DataContext context = await _factory.CreateDbContextAsync();
 
             return await context.Races.Where(r => r.StartTime.Year == year)
                 .Include(r => r.PigeonRaces)
+                .ThenInclude(pr => pr.Pigeon)
                 .ToListAsync();
+        }
+
+        public async Task AddRaceAsync(RaceEntity race)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            context.Races.Add(race);
+            await context.SaveChangesAsync();
         }
     }
 }

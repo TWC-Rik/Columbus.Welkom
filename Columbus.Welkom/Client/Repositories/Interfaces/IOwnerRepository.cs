@@ -5,6 +5,8 @@ namespace Columbus.Welkom.Client.Repositories.Interfaces
     public interface IOwnerRepository : IBaseRepository<OwnerEntity>
     {
         Task<int> DeleteRangeByYearAsync(int year);
-        Task<IEnumerable<OwnerEntity>> GetAllByYearAsync(int year);
+        Task<IEnumerable<OwnerEntity>> GetAllByYearWithAllPigeonsAsync(int year);
+        Task<IEnumerable<OwnerEntity>> GetAllByYearWithYearPigeonsAsync(int year);
+        Task<IEnumerable<OwnerEntity>> GetAllByYearWithYoungPigeonsAsync(int year);
     }
 }
