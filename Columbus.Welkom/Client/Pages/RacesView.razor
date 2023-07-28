@@ -80,31 +80,34 @@
         try
         {
             _races = await RaceService.ReadRacesFromDirectoryAsync();
+            await RaceService.OverwriteRacesAsync(_races, Year);
         } catch (JSException)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
             return;
         }
-
-        await RaceService.OverwriteRacesAsync(_races, Year);
-        _isLoading = false;
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
     private async Task ReadFile()
     {
         _isLoading = true;
 
-        Race newRace;
         try
         {
-            newRace = await RaceService.ReadRaceFromFileAsync();
+            Race newRace = await RaceService.ReadRaceFromFileAsync();
+            _races = _races.Append(newRace);
+            await RaceService.StoreRaceAsync(newRace);
         } catch (JSException)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
-            return;
+            _isLoading = false;
+        } finally
+        {
+            _isLoading = false;
         }
-
-        _races = _races.Append(newRace);
-        await RaceService.StoreRaceAsync(newRace);
     }
 }

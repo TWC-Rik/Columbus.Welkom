@@ -28,11 +28,17 @@ namespace Columbus.Welkom.Client.Repositories
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            IQueryable<PigeonEntity> query = context.Pigeons.Select(p => p);
-            foreach (var p in pigeons)
-                query = query.Union(context.Pigeons.Where(pe => pe.Country == p.Country && pe.Year == p.Year && pe.RingNumber == p.RingNumber));
+            IEnumerable<string> countries = pigeons.Select(p => p.Country).Distinct();
+            IEnumerable<int> years = pigeons.Select(p => p.Year).Distinct();
+            IEnumerable<int> ringNumbers = pigeons.Select(p => p.RingNumber).Distinct();
 
-            return await query.ToListAsync();
+            IEnumerable<PigeonEntity> result = await context.Pigeons
+                .Where(p => countries.Contains(p.Country))
+                .Where(p => years.Contains(p.Year))
+                .Where(p => ringNumbers.Contains(p.RingNumber))
+                .ToListAsync();
+
+            return result.Where(pe => pigeons.Any(p => p.Country == pe.Country && p.Year == pe.Year && p.RingNumber == pe.RingNumber));
         }
     }
 }

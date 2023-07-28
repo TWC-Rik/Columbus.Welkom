@@ -35,7 +35,7 @@ namespace Columbus.Welkom.Client.Repositories
             using DataContext context = await _factory.CreateDbContextAsync();
 
             return await context.Races.Where(r => r.StartTime.Year == year)
-                .Include(r => r.PigeonRaces)
+                .Include(r => r.PigeonRaces!)
                 .ThenInclude(pr => pr.Pigeon)
                 .ToListAsync();
         }
