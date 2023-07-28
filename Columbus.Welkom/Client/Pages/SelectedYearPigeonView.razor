@@ -60,7 +60,7 @@
     {
         await base.OnParametersSetAsync();
 
-        _allOwners = await OwnerService.GetOwnersByYearAsync(Year);
+        _allOwners = await OwnerService.GetOwnersByYearWithYearPigeonsAsync(Year);
         // Fetch the owner/pigeon pairings from data.
         _ownerPigeonPairs = new List<OwnerPigeonPair>();
     }

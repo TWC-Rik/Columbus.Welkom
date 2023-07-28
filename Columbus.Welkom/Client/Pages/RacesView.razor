@@ -7,11 +7,20 @@
         Vluchten
     </RadzenText>
 
-    <RadzenButton Text="W-Bestanden"
-                  ButtonStyle="ButtonStyle.Primary"
-                  ButtonType="ButtonType.Button"
-                  Icon="drive_folder_upload"
-                  Click="ReadDirectory" />
+    <RadzenStack Orientation="Orientation.Horizontal">
+        <RadzenButton Text="W-Bestanden"
+                      ButtonStyle="ButtonStyle.Primary"
+                      ButtonType="ButtonType.Button"
+                      Icon="drive_folder_upload"
+                      Click="ReadDirectory" />
+
+        <RadzenButton Text="W-Bestand"
+                      ButtonStyle="ButtonStyle.Secondary"
+                      ButtonType="ButtonType.Button"
+                      Icon="upload_file"
+                      Click="ReadFile" />
+    </RadzenStack>
+
 
     <RadzenDataGrid Data="_races" IsLoading="_isLoading" EmptyText="Geen vluchten gevonden.">
         <Columns>
@@ -61,7 +70,7 @@
     {
         await base.OnParametersSetAsync();
 
-        _races = await RaceService.GetAllRacesByYear(Year);
+        _races = await RaceService.GetAllRacesByYearAsync(Year);
     }
 
     private async Task ReadDirectory()
@@ -70,14 +79,32 @@
 
         try
         {
-            _races = await RaceService.ReadRacesFromDirectory();
+            _races = await RaceService.ReadRacesFromDirectoryAsync();
         } catch (JSException)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
             return;
         }
 
-        await RaceService.OverwriteRaces(_races, Year);
+        await RaceService.OverwriteRacesAsync(_races, Year);
         _isLoading = false;
+    }
+
+    private async Task ReadFile()
+    {
+        _isLoading = true;
+
+        Race newRace;
+        try
+        {
+            newRace = await RaceService.ReadRaceFromFileAsync();
+        } catch (JSException)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
+            return;
+        }
+
+        _races = _races.Append(newRace);
+        await RaceService.StoreRaceAsync(newRace);
     }
 }

@@ -7,9 +7,6 @@ using Columbus.Welkom.Client.Services.Interfaces;
 using Blazored.LocalStorage;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Models.Entities;
-using Microsoft.EntityFrameworkCore;
-using Columbus.Welkom.Client.DataContext;
-using SqliteWasmHelper;
 
 namespace Columbus.Welkom.Client.Services
 {
@@ -49,9 +46,23 @@ namespace Columbus.Welkom.Client.Services
             }
         }
 
-        public async Task<IEnumerable<Owner>> GetOwnersByYearAsync(int year)
+        public async Task<IEnumerable<Owner>> GetOwnersByYearWithAllPigeonsAsync(int year)
         {
-            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearAsync(year);
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearWithAllPigeonsAsync(year);
+
+            return owners.Select(o => o.ToOwner());
+        }
+
+        public async Task<IEnumerable<Owner>> GetOwnersByYearWithYearPigeonsAsync(int year)
+        {
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearWithYearPigeonsAsync(year);
+
+            return owners.Select(o => o.ToOwner());
+        }
+
+        public async Task<IEnumerable<Owner>> GetOwnersByYearWithYoungPigeonsAsync(int year)
+        {
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearWithYoungPigeonsAsync(year);
 
             return owners.Select(o => o.ToOwner());
         }

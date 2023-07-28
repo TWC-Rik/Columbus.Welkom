@@ -64,7 +64,7 @@
         await base.OnParametersSetAsync();
 
         //_allRaces = RaceService.GetStorage(Club, Year) ?? new List<Race>();
-        _allOwners = await OwnerService.GetOwnersByYearAsync(Year);
+        _allOwners = await OwnerService.GetOwnersByYearWithYoungPigeonsAsync(Year);
         // Fetch the owner/pigeon pairings from data.
         _ownerPigeonPairs = new List<OwnerPigeonPair>();
 

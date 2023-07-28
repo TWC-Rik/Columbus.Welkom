@@ -61,7 +61,7 @@
     {
         await base.OnParametersSetAsync();
 
-        _allOwners = await OwnerService.GetOwnersByYearAsync(Year);
+        _allOwners = await OwnerService.GetOwnersByYearWithYoungPigeonsAsync(Year);
         // Fetch swap pairs from storage
         _pigeonSwapPairs = new List<PigeonSwapPair>();
     }
