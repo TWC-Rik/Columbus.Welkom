@@ -25,6 +25,7 @@ namespace Columbus.Welkom.Client.Models.Entities
         public int OwnerId { get; set; }
 
         public OwnerEntity? Owner { get; set; }
+        public ICollection<PigeonRaceEntity>? PigeonRaces { get; set; }
 
         public Pigeon ToPigeon() => new Pigeon(Country, Year, RingNumber, Chip, Sex);
     }

@@ -6,7 +6,7 @@ namespace Columbus.Welkom.Client.Models.Entities
     {
         public RaceEntity() { }
 
-        public RaceEntity(Race race)
+        public RaceEntity(Race race, IList<PigeonEntity> pigeonsInRace)
         {
             Number = race.Number ?? 0;
             Code = race.Code;
@@ -15,7 +15,6 @@ namespace Columbus.Welkom.Client.Models.Entities
             StartTime = race.StartTime;
             Latitude = race.Location.Lattitude;
             Longitude = race.Location.Longitude;
-            PigeonRaces = race.PigeonRaces.Select(pr => new PigeonRaceEntity(pr)).ToList();
         }
 
         public int Id { get; set; }
