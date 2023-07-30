@@ -16,12 +16,32 @@ namespace Columbus.Welkom.Client.Repositories
             _factory = factory;
         }
 
-        public async Task AddRangeAsync(IEnumerable<PigeonEntity> pigeons)
+        public async Task<PigeonEntity> AddAsync(PigeonEntity pigeon)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            context.Add(pigeon);
+            await context.SaveChangesAsync();
+
+            return pigeon;
+        }
+
+        public async Task<IEnumerable<PigeonEntity>> AddRangeAsync(IEnumerable<PigeonEntity> pigeons)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
             context.AddRange(pigeons);
             await context.SaveChangesAsync();
+
+            return pigeons;
+        }
+
+        public async Task<IEnumerable<PigeonEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            return await context.Pigeons.Where(o => ids.Contains(o.Id))
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<PigeonEntity>> GetPigeonsByCountriesAndYearsAndRingNumbers(IEnumerable<Pigeon> pigeons)

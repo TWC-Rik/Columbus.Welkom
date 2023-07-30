@@ -29,6 +29,7 @@ builder.Services.AddSqliteWasmDbContextFactory<DataContext>(opts => opts.UseSqli
 // Repositories
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IPigeonRepository, PigeonRepository>();
+builder.Services.AddScoped<IPigeonRaceRepository, PigeonRaceRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 
 //Services

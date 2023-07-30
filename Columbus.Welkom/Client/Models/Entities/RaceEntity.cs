@@ -6,7 +6,7 @@ namespace Columbus.Welkom.Client.Models.Entities
     {
         public RaceEntity() { }
 
-        public RaceEntity(Race race, IList<PigeonEntity> pigeonsInRace)
+        public RaceEntity(Race race)
         {
             Number = race.Number ?? 0;
             Code = race.Code;

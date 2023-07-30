@@ -16,6 +16,16 @@ namespace Columbus.Welkom.Client.Models.Entities
             OwnerId = owner.ID;
         }
 
+        public PigeonEntity(Pigeon pigeon, int ownerId)
+        {
+            Year = pigeon.Year;
+            Country = pigeon.Country;
+            RingNumber = pigeon.RingNumber;
+            Chip = pigeon.Chip;
+            Sex = pigeon.Sex;
+            OwnerId = ownerId;
+        }
+
         public int Id { get; set; }
         public int Year { get; set; }
         public string Country { get; set; } = string.Empty;
@@ -28,5 +38,7 @@ namespace Columbus.Welkom.Client.Models.Entities
         public ICollection<PigeonRaceEntity>? PigeonRaces { get; set; }
 
         public Pigeon ToPigeon() => new Pigeon(Country, Year, RingNumber, Chip, Sex);
+
+        public bool IsPigeon(Pigeon pigeon) => pigeon.Country == Country && pigeon.Year == Year && pigeon.RingNumber == RingNumber;
     }
 }

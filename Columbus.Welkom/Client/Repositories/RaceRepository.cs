@@ -14,12 +14,24 @@ namespace Columbus.Welkom.Client.Repositories
             _factory = factory;
         }
 
-        public async Task AddRangeAsync(IEnumerable<RaceEntity> entities)
+        public async Task<RaceEntity> AddAsync(RaceEntity race)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            context.Races.AddRange(entities);
+            context.Races.Add(race);
             await context.SaveChangesAsync();
+
+            return race;
+        }
+
+        public async Task<IEnumerable<RaceEntity>> AddRangeAsync(IEnumerable<RaceEntity> races)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            context.Races.AddRange(races);
+            await context.SaveChangesAsync();
+
+            return races;
         }
 
         public async Task<int> DeleteRangeByYearAsync(int year)
@@ -40,12 +52,12 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddRaceAsync(RaceEntity race)
+        public async Task<IEnumerable<RaceEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            context.Races.Add(race);
-            await context.SaveChangesAsync();
+            return await context.Races.Where(o => ids.Contains(o.Id))
+                .ToListAsync();
         }
     }
 }

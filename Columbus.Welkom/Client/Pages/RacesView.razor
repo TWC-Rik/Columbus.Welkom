@@ -84,7 +84,6 @@
         } catch (JSException)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
-            return;
         }
         finally
         {
@@ -98,13 +97,15 @@
 
         try
         {
+            DateTime start = DateTime.Now;
             Race newRace = await RaceService.ReadRaceFromFileAsync();
+            Console.WriteLine(DateTime.Now - start);
+
             _races = _races.Append(newRace);
             await RaceService.StoreRaceAsync(newRace);
         } catch (JSException)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fout", "Bestand kon niet worden geladen.");
-            _isLoading = false;
         } finally
         {
             _isLoading = false;

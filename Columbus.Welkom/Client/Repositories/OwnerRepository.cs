@@ -49,12 +49,32 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddRangeAsync(IEnumerable<OwnerEntity> owners)
+        public async Task<OwnerEntity> AddAsync(OwnerEntity owner)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            await context.Owners.AddRangeAsync(owners);
+            context.Owners.Add(owner);
             await context.SaveChangesAsync();
+
+            return owner;
+        }
+
+        public async Task<IEnumerable<OwnerEntity>> AddRangeAsync(IEnumerable<OwnerEntity> owners)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            context.Owners.AddRange(owners);
+            await context.SaveChangesAsync();
+
+            return owners;
+        }
+
+        public async Task<IEnumerable<OwnerEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            return await context.Owners.Where(o => ids.Contains(o.Id))
+                .ToListAsync();
         }
     }
 }
