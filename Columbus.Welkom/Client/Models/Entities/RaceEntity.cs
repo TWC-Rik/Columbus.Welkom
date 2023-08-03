@@ -47,5 +47,19 @@ namespace Columbus.Welkom.Client.Models.Entities
 
             return new Race(Name, Code, StartTime, startLocation, ownerRaces, PigeonRaces?.Select(pr => pr.ToPigeonRace()).ToList() ?? new List<PigeonRace>());
         }
+
+        public SimpleRace ToSimpleRace()
+        {
+            if (PigeonRaces is null)
+                throw new ArgumentNullException("PigeonRaces cannot be null");
+
+            Coordinate startLocation = new Coordinate(Longitude, Latitude);
+
+            int ownerRaceCount = PigeonRaces.Select(pr => pr.Pigeon!.Owner)
+                .Distinct()
+                .Count();
+
+            return new SimpleRace(Number, Type, Name, Code, StartTime, startLocation, ownerRaceCount, PigeonRaces.Count);
+        }
     }
 }

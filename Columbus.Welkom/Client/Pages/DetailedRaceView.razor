@@ -1,13 +1,15 @@
-﻿<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical" Visible="Race is not null">
+﻿@inject IRaceService RaceService;
+
+<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical" Visible="_race is not null">
     <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="width: 100%;">
         <RadzenText TextStyle="TextStyle.DisplayH6" TextAlign="TextAlign.Center">
-            @Race?.ToString() gelost op @Race?.StartTime met @Race?.OwnerRaces.Count deelnemers en @Race?.PigeonRaces.Count duiven in concours.
+            @_race?.ToString() gelost op @_race?.StartTime met @_race?.OwnerRaces.Count deelnemers en @_race?.PigeonRaces.Count duiven in concours.
         </RadzenText>
 
-        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="arrow_back" Click="Close" Size="ButtonSize.Small" />
+        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="arrow_back" Click="() => _race = null" Size="ButtonSize.Small" />
     </RadzenStack>
 
-    <RadzenDataGrid Data="Race?.PigeonRaces" EmptyText="Geen duiven in vlucht.">
+    <RadzenDataGrid Data="_race?.PigeonRaces" EmptyText="Geen duiven in vlucht.">
         <Columns>
             <RadzenDataGridColumn TItem="PigeonRace" Property="Position" Title="Prs" Width="50px" />
             <RadzenDataGridColumn TItem="PigeonRace" Property="Next" Title="Vlg" Width="50px" />
@@ -46,9 +48,23 @@
 
 @code {
     [Parameter, EditorRequired]
-    public Race? Race { get; set; }
+    public string? Code { get; set; }
     [Parameter, EditorRequired]
-    public EventCallback Close { get; set; }
+    public int? Year { get; set; }
 
-    private OwnerRace GetOwnerRace(PigeonRace pigeonRace) => Race!.OwnerRaces.First(or => or.Owner.Pigeons.Contains(pigeonRace.Pigeon));
+    private Race? _race;
+    private Dictionary<PigeonRace, OwnerRace> _ownerRaces = null!;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        if (Code is null || Year is null)
+            return;
+
+        _race = await RaceService.GetRaceByCodeAndYear(Code, Year.Value);
+
+        _ownerRaces = _race.PigeonRaces.ToDictionary(pr => pr, pr => _race.OwnerRaces.First(or => or.Owner.Pigeons.Contains(pr.Pigeon)));
+    }
+
+    private OwnerRace GetOwnerRace(PigeonRace pigeonRace) => _ownerRaces[pigeonRace];
 }

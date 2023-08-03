@@ -1,6 +1,7 @@
 ﻿using Columbus.Models;
 using Columbus.UDP;
 using Columbus.UDP.Interfaces;
+using Columbus.Welkom.Client.Models;
 using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Services.Interfaces;
@@ -106,11 +107,11 @@ namespace Columbus.Welkom.Client.Services
             return raceReader.GetRace();
         }
 
-        public async Task<IEnumerable<Race>> GetAllRacesByYearAsync(int year)
+        public async Task<IEnumerable<SimpleRace>> GetAllRacesByYearAsync(int year)
         {
-            IEnumerable<RaceEntity> races = await _raceRepository.GetAllByYearAsync(year);
+            IEnumerable<SimpleRaceEntity> races = await _raceRepository.GetAllByYearAsync(year);
 
-            return races.Select(r => r.ToRace());
+            return races.Select(r => r.ToSimpleRace());
         }
 
         public async Task OverwriteRacesAsync(IEnumerable<Race> races, int year)
@@ -161,6 +162,13 @@ namespace Columbus.Welkom.Client.Services
             await _pigeonRepository.AddRangeAsync(pigeonsToAdd);
 
             return await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbers(pigeons);
+        }
+
+        public async Task<Race> GetRaceByCodeAndYear(string code, int year)
+        {
+            RaceEntity race = await _raceRepository.GetByCodeAndYear(code, year);
+
+            return race.ToRace();
         }
     }
 }
