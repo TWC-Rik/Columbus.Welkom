@@ -41,7 +41,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-Pa8Ato+g1+5+mYUnbHcbI9XHg4yRDNf9vdPy4ebNKMs=",
+      "hash": "sha256-p3BPEDvPvTj8keBj2CTIFnuNDP6vZxfWTZsJtzFQErg=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -57,7 +57,7 @@
       "url": "_framework\/Columbus.UDP.dll"
     },
     {
-      "hash": "sha256-Qg75UWHc\/5BmjL0T2xZjAitWkS\/Y2oUSks0YNlC4Q+U=",
+      "hash": "sha256-1aWYNbXsXbjeJLNqsWLM3\/tmQg8KAd+La4ilovNDqzQ=",
       "url": "_framework\/Columbus.Welkom.Client.dll"
     },
     {
@@ -81,7 +81,7 @@
       "url": "_framework\/KristofferStrube.Blazor.WebIDL.dll"
     },
     {
-      "hash": "sha256-kwOKuAUMTYKoxztlkFBMQRLgdmit9BjkiAjokCefOEI=",
+      "hash": "sha256-cL\/+8XBEX7PLLmjFVn75UzFANmRaV5kaXT3eVNUm\/8c=",
       "url": "_framework\/Microsoft.AspNetCore.Components.dll"
     },
     {
@@ -573,5 +573,5 @@
       "url": "_content\/SqliteWasmHelper\/browserCache.js"
     }
   ],
-  "version": "JPhasbyg"
+  "version": "DDZIu\/VD"
 };
