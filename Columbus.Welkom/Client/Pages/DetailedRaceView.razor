@@ -1,10 +1,10 @@
 ﻿<RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical" Visible="Race is not null">
-    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="width: 100%;">
         <RadzenText TextStyle="TextStyle.DisplayH6" TextAlign="TextAlign.Center">
-            @Race?.ToString()
+            @Race?.ToString() gelost op @Race?.StartTime met @Race?.OwnerRaces.Count deelnemers en @Race?.PigeonRaces.Count duiven in concours.
         </RadzenText>
 
-        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="arrow_back" Click="Close" />
+        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="arrow_back" Click="Close" Size="ButtonSize.Small" />
     </RadzenStack>
 
     <RadzenDataGrid Data="Race?.PigeonRaces" EmptyText="Geen duiven in vlucht.">

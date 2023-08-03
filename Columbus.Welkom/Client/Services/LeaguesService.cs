@@ -1,16 +1,12 @@
-﻿using Blazored.LocalStorage;
-using Columbus.Welkom.Client.Models;
-using Columbus.Welkom.Client.Services.Interfaces;
+﻿using Columbus.Welkom.Client.Services.Interfaces;
 
 namespace Columbus.Welkom.Client.Services
 {
-    public class LeaguesService : BaseService<Leagues>, ILeaguesService
+    public class LeaguesService : ILeaguesService
     {
-        public LeaguesService(ISyncLocalStorageService localStorageService) : base(localStorageService)
+        public LeaguesService()
         {
 
         }
-
-        protected override string GetStorageKey(int club, int year) => $"LEAGUES_{club}_{year}";
     }
 }

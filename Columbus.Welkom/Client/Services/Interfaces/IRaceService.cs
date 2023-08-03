@@ -2,8 +2,12 @@
 
 namespace Columbus.Welkom.Client.Services.Interfaces
 {
-    public interface IRaceService : IBaseService<IEnumerable<Race>>
+    public interface IRaceService
     {
-        Task<IEnumerable<Race>> ReadRacesFromDirectory();
+        Task<IEnumerable<Race>> GetAllRacesByYearAsync(int year);
+        Task OverwriteRacesAsync(IEnumerable<Race> races, int year);
+        Task<Race> ReadRaceFromFileAsync();
+        Task<IEnumerable<Race>> ReadRacesFromDirectoryAsync();
+        Task StoreRaceAsync(Race race);
     }
 }

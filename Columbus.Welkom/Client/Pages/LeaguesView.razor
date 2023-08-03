@@ -98,11 +98,11 @@
     private Leagues _leagues = null!;
     private IEnumerable<LeagueOwner> _allOwners = null!;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
+        await base.OnParametersSetAsync();
 
-        _allOwners = OwnerService.GetStorage(Club, Year)?.Select(owner => new LeagueOwner(owner)) ?? new List<LeagueOwner>();
-        _leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<LeagueOwner>());
+        //_allOwners = await OwnerService.GetOwnersByYearWithAllPigeonsAsync(Year);
+        //_leagues = LeagueService.GetStorage(Club, Year) ?? new Leagues(new List<LeagueOwner>());
     }
 }

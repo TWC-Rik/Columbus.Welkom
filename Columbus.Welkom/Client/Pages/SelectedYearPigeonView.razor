@@ -56,11 +56,11 @@
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<OwnerPigeonPair> _ownerPigeonPairs = null!;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
+        await base.OnParametersSetAsync();
 
-        _allOwners = OwnerService.GetStorage(Club, Year) ?? new List<Owner>();
+        _allOwners = await OwnerService.GetOwnersByYearWithYearPigeonsAsync(Year);
         // Fetch the owner/pigeon pairings from data.
         _ownerPigeonPairs = new List<OwnerPigeonPair>();
     }
