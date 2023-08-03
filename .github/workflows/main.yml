@@ -16,6 +16,9 @@ jobs:
                   dotnet-version: 7.x
                   include-prerelease: true
 
+            - name: Package Restore 
+              run: dotnet workload restore 
+
             - name: Publish Columbus.Welkom
               run: dotnet publish Columbus.Welkom/Client/Columbus.Welkom.Client.csproj -c Release -o release --nologo
 
