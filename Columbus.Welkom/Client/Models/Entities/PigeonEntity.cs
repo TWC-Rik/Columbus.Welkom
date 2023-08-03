@@ -40,5 +40,21 @@ namespace Columbus.Welkom.Client.Models.Entities
         public Pigeon ToPigeon() => new Pigeon(Country, Year, RingNumber, Chip, Sex);
 
         public bool IsPigeon(Pigeon pigeon) => pigeon.Country == Country && pigeon.Year == Year && pigeon.RingNumber == RingNumber;
+
+        /// <summary>
+        /// Overriden to only include country, year, and ringnumber.
+        /// This makes comparison between entities easier, especially using hashsets for performant inclusion checks.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            HashCode hashCode = new HashCode();
+
+            hashCode.Add(Country);
+            hashCode.Add(Year);
+            hashCode.Add(RingNumber);
+
+            return hashCode.ToHashCode();
+        }
     }
 }

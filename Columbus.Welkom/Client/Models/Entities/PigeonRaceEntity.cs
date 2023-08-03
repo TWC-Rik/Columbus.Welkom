@@ -6,16 +6,18 @@ namespace Columbus.Welkom.Client.Models.Entities
     {
         public PigeonRaceEntity() { }
 
-        public PigeonRaceEntity(PigeonRace pigeonRace, int pigeonId, int raceId)
+        public PigeonRaceEntity(PigeonRace pigeonRace, PigeonEntity pigeon, RaceEntity race)
         {
-            PigeonId = pigeonId;
-            RaceId = raceId;
+            Pigeon = pigeon;
+            Race = race;
             Mark = pigeonRace.Mark;
             ArrivalTime = pigeonRace.ArrivalTime;
         }
 
-        public PigeonRaceEntity(PigeonRace pigeonRace)
+        public PigeonRaceEntity(PigeonRace pigeonRace, int pigeonId, int raceId)
         {
+            PigeonId = pigeonId;
+            RaceId = raceId;
             Mark = pigeonRace.Mark;
             ArrivalTime = pigeonRace.ArrivalTime;
         }

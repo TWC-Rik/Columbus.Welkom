@@ -97,9 +97,7 @@
 
         try
         {
-            DateTime start = DateTime.Now;
             Race newRace = await RaceService.ReadRaceFromFileAsync();
-            Console.WriteLine(DateTime.Now - start);
 
             _races = _races.Append(newRace);
             await RaceService.StoreRaceAsync(newRace);

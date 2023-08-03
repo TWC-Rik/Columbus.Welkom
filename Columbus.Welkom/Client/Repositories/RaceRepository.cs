@@ -48,7 +48,8 @@ namespace Columbus.Welkom.Client.Repositories
 
             return await context.Races.Where(r => r.StartTime.Year == year)
                 .Include(r => r.PigeonRaces!)
-                .ThenInclude(pr => pr.Pigeon)
+                .ThenInclude(pr => pr.Pigeon!)
+                .ThenInclude(p => p.Owner)
                 .ToListAsync();
         }
 
