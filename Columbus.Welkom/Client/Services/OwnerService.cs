@@ -36,9 +36,10 @@ namespace Columbus.Welkom.Client.Services
                 FileSystemFileHandle fileHandle = fileHandles.Single();
 
                 var file = await fileHandle.GetFileAsync();
-                var fileContent = await file.TextAsync();
-                IOwnerReader ownerReader = new OwnerReader(fileContent.Split("\r\n"));
-                return ownerReader.GetOwners();
+                var stream = new StreamReader(await file.StreamAsync());
+
+                IOwnerReader ownerReader = new OwnerReader();
+                return await ownerReader.GetOwnersAsync(stream);
             }
             catch (Exception)
             {

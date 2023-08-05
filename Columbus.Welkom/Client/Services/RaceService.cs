@@ -40,9 +40,10 @@ namespace Columbus.Welkom.Client.Services
                 FileSystemFileHandle fileHandle = fileHandles.Single();
 
                 var file = await fileHandle.GetFileAsync();
-                var fileContent = await file.TextAsync();
-                IRaceReader raceReader = new RaceReader(fileContent.Split("\r\n"));
-                return raceReader.GetRace();
+                var stream = new StreamReader(await file.StreamAsync());
+
+                IRaceReader raceReader = new RaceReader();
+                return raceReader.GetRace(stream);
             }
             catch (Exception)
             {
@@ -99,12 +100,10 @@ namespace Columbus.Welkom.Client.Services
         private async Task<Race> ReadRaceFromFile(FileSystemFileHandle fileHandle)
         {
             var file = await fileHandle.GetFileAsync();
-            byte[] isoBytes = await file.ArrayBufferAsync();
-            string[] udpContent = Encoding.Latin1.GetString(isoBytes)
-                .Split("\r\n");
+            var stream = new StreamReader(await file.StreamAsync());
 
-            RaceReader raceReader = new RaceReader(udpContent);
-            return raceReader.GetRace();
+            IRaceReader raceReader = new RaceReader();
+            return raceReader.GetRace(stream);
         }
 
         public async Task<IEnumerable<SimpleRace>> GetAllRacesByYearAsync(int year)

@@ -26,6 +26,6 @@ namespace Columbus.Welkom.Client.Models.Entities
 
         public ICollection<PigeonEntity>? Pigeons { get; set; }
 
-        public Owner ToOwner() => new Owner(Id, Name, new Coordinate(Longitude, Latitude), Club, Pigeons?.Select(p => p.ToPigeon()) ?? new List<Pigeon>());
+        public Owner ToOwner() => new Owner(Id, Name, new Coordinate(Longitude, Latitude), Club, Pigeons?.Select(p => p.ToPigeon()).ToList() ?? new List<Pigeon>());
     }
 }

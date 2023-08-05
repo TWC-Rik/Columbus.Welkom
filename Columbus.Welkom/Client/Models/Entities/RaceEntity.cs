@@ -45,7 +45,7 @@ namespace Columbus.Welkom.Client.Models.Entities
                 .Select(o => new OwnerRace(o, startLocation, PigeonRaces.Count(pr => pr.Pigeon!.OwnerId == o.ID), 0))
                 .ToList();
 
-            return new Race(Name, Code, StartTime, startLocation, ownerRaces, PigeonRaces?.Select(pr => pr.ToPigeonRace()).ToList() ?? new List<PigeonRace>());
+            return new Race(Number, Type, Name, Code, StartTime, startLocation, ownerRaces, PigeonRaces?.Select(pr => pr.ToPigeonRace()).ToList() ?? new List<PigeonRace>());
         }
 
         public SimpleRace ToSimpleRace()
