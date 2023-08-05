@@ -7,6 +7,7 @@ using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Services.Interfaces;
 using KristofferStrube.Blazor.FileSystem;
 using KristofferStrube.Blazor.FileSystemAccess;
+using KristofferStrube.Blazor.Streams;
 using System.Text;
 
 namespace Columbus.Welkom.Client.Services
@@ -40,10 +41,11 @@ namespace Columbus.Welkom.Client.Services
                 FileSystemFileHandle fileHandle = fileHandles.Single();
 
                 var file = await fileHandle.GetFileAsync();
-                var stream = new StreamReader(await file.StreamAsync());
+                ReadableStream readableStream = await file.StreamAsync();
+                var stream = new StreamReader(readableStream, Encoding.Latin1, false, 1_000_000);
 
                 IRaceReader raceReader = new RaceReader();
-                return raceReader.GetRace(stream);
+                return await raceReader.GetRaceAsync(stream);
             }
             catch (Exception)
             {
@@ -100,10 +102,11 @@ namespace Columbus.Welkom.Client.Services
         private async Task<Race> ReadRaceFromFile(FileSystemFileHandle fileHandle)
         {
             var file = await fileHandle.GetFileAsync();
-            var stream = new StreamReader(await file.StreamAsync());
+            ReadableStream readableStream = await file.StreamAsync();
+            var stream = new StreamReader(readableStream, Encoding.Latin1, false, 1_000_000);
 
             IRaceReader raceReader = new RaceReader();
-            return raceReader.GetRace(stream);
+            return await raceReader.GetRaceAsync(stream);
         }
 
         public async Task<IEnumerable<SimpleRace>> GetAllRacesByYearAsync(int year)

@@ -7,6 +7,8 @@ using Columbus.Welkom.Client.Services.Interfaces;
 using Blazored.LocalStorage;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Models.Entities;
+using KristofferStrube.Blazor.Streams;
+using System.Text;
 
 namespace Columbus.Welkom.Client.Services
 {
@@ -29,14 +31,14 @@ namespace Columbus.Welkom.Client.Services
             {
                 OpenFilePickerOptionsStartInWellKnownDirectory options = new()
                 {
-                    Multiple = false,
-                    StartIn = WellKnownDirectory.Downloads
+                    Multiple = false
                 };
                 var fileHandles = await _fileSystemAccessService.ShowOpenFilePickerAsync(options);
                 FileSystemFileHandle fileHandle = fileHandles.Single();
 
                 var file = await fileHandle.GetFileAsync();
-                var stream = new StreamReader(await file.StreamAsync());
+                ReadableStream readableStream = await file.StreamAsync();
+                var stream = new StreamReader(readableStream, Encoding.Latin1, false, 1_000_000);
 
                 IOwnerReader ownerReader = new OwnerReader();
                 return await ownerReader.GetOwnersAsync(stream);
