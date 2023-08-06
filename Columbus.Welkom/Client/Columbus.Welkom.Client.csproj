@@ -16,6 +16,7 @@
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="Columbus.Models" Version="0.1.5" />
     <PackageReference Include="Columbus.UDP" Version="0.2.3" />
+    <PackageReference Include="EFCore.BulkExtensions" Version="7.1.5" />
     <PackageReference Include="KristofferStrube.Blazor.FileSystemAccess" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.2" PrivateAssets="all" />

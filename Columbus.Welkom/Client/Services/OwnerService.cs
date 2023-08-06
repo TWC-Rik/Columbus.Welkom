@@ -77,7 +77,13 @@ namespace Columbus.Welkom.Client.Services
         {
             await _ownerRepository.DeleteRangeByYearAsync(year);
 
-            await _ownerRepository.AddRangeAsync(owners.Select(o => new OwnerEntity(o, year)));
+            List<OwnerEntity> ownerEntities = owners.Select(o => new OwnerEntity(o, year))
+                .ToList();
+            List<PigeonEntity> pigeonEntities = owners.SelectMany(o => o.Pigeons.Select(p => new PigeonEntity(p, o.ID)))
+                .ToList();
+
+            await _ownerRepository.AddRangeAsync(ownerEntities);
+            await _pigeonRepository.AddRangeAsync(pigeonEntities);
         }
     }
 }

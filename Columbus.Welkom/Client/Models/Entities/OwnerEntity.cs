@@ -14,7 +14,6 @@ namespace Columbus.Welkom.Client.Models.Entities
             Latitude = owner.Coordinate?.Lattitude ?? 0;
             Longitude = owner.Coordinate?.Longitude ?? 0;
             Club = owner.Club;
-            Pigeons = owner.Pigeons.Select(p => new PigeonEntity(p, owner)).ToList();
         }
 
         public int Id { get; set; }

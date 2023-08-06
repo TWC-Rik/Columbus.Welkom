@@ -1,6 +1,7 @@
 ﻿using Columbus.Models;
 using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using SqliteWasmHelper;
 using System.Linq.Dynamic.Core;
@@ -30,7 +31,8 @@ namespace Columbus.Welkom.Client.Repositories
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            context.AddRange(pigeons);
+            context.BulkInsert(pigeons);
+            BulkInsertWorkaround(context);
             await context.SaveChangesAsync();
 
             return pigeons;
@@ -59,6 +61,17 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
 
             return result.Where(pe => pigeons.Any(p => p.Country == pe.Country && p.Year == pe.Year && p.RingNumber == pe.RingNumber));
+        }
+
+        // SqliteWasmHelper does not work perfectly with EFCore.BulkExtensions
+        // This is a minor workaround to force inserts.
+        private void BulkInsertWorkaround(DataContext context)
+        {
+            var first = context.Pigeons.FirstOrDefault();
+            if (first != null)
+            {
+                context.Entry(first).State = EntityState.Modified;
+            }
         }
     }
 }
