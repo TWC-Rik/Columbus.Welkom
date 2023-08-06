@@ -27,26 +27,29 @@ namespace Columbus.Welkom.Client.Services
 
         public async Task<IEnumerable<Owner>> ReadOwnersFromFile()
         {
+            OpenFilePickerOptionsStartInWellKnownDirectory options = new()
+            {
+                Multiple = false
+            };
+
+            FileSystemFileHandle[] fileHandles;
             try
             {
-                OpenFilePickerOptionsStartInWellKnownDirectory options = new()
-                {
-                    Multiple = false
-                };
-                var fileHandles = await _fileSystemAccessService.ShowOpenFilePickerAsync(options);
-                FileSystemFileHandle fileHandle = fileHandles.Single();
-
-                var file = await fileHandle.GetFileAsync();
-                ReadableStream readableStream = await file.StreamAsync();
-                var stream = new StreamReader(readableStream, Encoding.Latin1, false, 1_000_000);
-
-                IOwnerReader ownerReader = new OwnerReader();
-                return await ownerReader.GetOwnersAsync(stream);
+                fileHandles = await _fileSystemAccessService.ShowOpenFilePickerAsync(options);
             }
             catch (Exception)
             {
                 throw;
             }
+
+            FileSystemFileHandle fileHandle = fileHandles.Single();
+
+            var file = await fileHandle.GetFileAsync();
+            ReadableStream readableStream = await file.StreamAsync();
+            var stream = new StreamReader(readableStream, Encoding.Latin1, false, 1_000_000);
+
+            IOwnerReader ownerReader = new OwnerReader();
+            return await ownerReader.GetOwnersAsync(stream);
         }
 
         public async Task<IEnumerable<Owner>> GetOwnersByYearWithAllPigeonsAsync(int year)
