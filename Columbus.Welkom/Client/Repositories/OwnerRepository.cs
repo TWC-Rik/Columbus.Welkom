@@ -1,4 +1,5 @@
-﻿using Columbus.Welkom.Client.Models.Entities;
+﻿using Columbus.Models;
+using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +20,9 @@ namespace Columbus.Welkom.Client.Repositories
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            return await context.Owners.Where(o => o.Year == year)
-                .ExecuteDeleteAsync();
+            IEnumerable<OwnerEntity> owners = context.Owners.Where(o => o.Year == year);
+            context.RemoveRange(owners);
+            return await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<OwnerEntity>> GetAllByYearWithAllPigeonsAsync(int year)

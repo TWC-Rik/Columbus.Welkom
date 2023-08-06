@@ -54,6 +54,8 @@ namespace Columbus.Welkom.Client
             // Race
             modelBuilder.Entity<RaceEntity>().ToTable("race");
             modelBuilder.Entity<RaceEntity>().HasKey(e => e.Id);
+            modelBuilder.Entity<RaceEntity>().HasIndex(e => e.Code);
+            modelBuilder.Entity<RaceEntity>().HasIndex(e => e.Number);
             modelBuilder.Entity<RaceEntity>().HasMany(e => e.PigeonRaces)
                 .WithOne(e => e.Race)
                 .HasForeignKey(e => e.RaceId);

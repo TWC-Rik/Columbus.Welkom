@@ -128,6 +128,9 @@ namespace Columbus.Welkom.Client.Services
 
         public async Task StoreRaceAsync(Race race)
         {
+            if (await _raceRepository.IsRaceCodePresentForYear(race.Code, race.StartTime.Year))
+                return;
+
             IEnumerable<Owner> raceOwners = race.OwnerRaces.Select(or => or.Owner);
             await AddMissingOwners(raceOwners, race.StartTime.Year);
 
@@ -196,6 +199,15 @@ namespace Columbus.Welkom.Client.Services
             RaceEntity race = await _raceRepository.GetByCodeAndYear(code, year);
 
             return race.ToRace();
+        }
+
+        public async Task DeleteRaceByCodeAndYear(string code, int year)
+        {
+            RaceEntity race = await _raceRepository.GetByCodeAndYear(code, year);
+
+            await _pigeonRaceRepository.DeleteAllByRaceId(race.Id);
+
+            await _raceRepository.DeleteRaceByCodeAndYear(code, year);
         }
     }
 }

@@ -51,9 +51,10 @@
                     @race.PigeonCount
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="SimpleRace" Width="50px">
+            <RadzenDataGridColumn TItem="SimpleRace" Width="90px">
                 <Template Context="race">
                     <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="info" Click="(() => _selectedRace = race)" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="(() => DeleteRace(race))" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -70,6 +71,7 @@
 
     private IEnumerable<SimpleRace> _races = null!;
     private SimpleRace? _selectedRace;
+    private string? _raceCodeBeingDeleted;
     private bool _isLoading = false;
 
     protected override async Task OnParametersSetAsync()
@@ -115,5 +117,11 @@
         {
             _isLoading = false;
         }
+    }
+
+    private async Task DeleteRace(SimpleRace race)
+    {
+        await RaceService.DeleteRaceByCodeAndYear(race.Code, race.StartTime.Year);
+        _races = await RaceService.GetAllRacesByYearAsync(Year);
     }
 }

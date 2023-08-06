@@ -1,4 +1,5 @@
-﻿using Columbus.Welkom.Client.Models.Entities;
+﻿using Columbus.Models;
+using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SqliteWasmHelper;
@@ -38,8 +39,9 @@ namespace Columbus.Welkom.Client.Repositories
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            return await context.Races.Where(r => r.StartTime.Year == year)
-                .ExecuteDeleteAsync();
+            IEnumerable<RaceEntity> races = context.Races.Where(r => r.StartTime.Year == year);
+            context.RemoveRange(races);
+            return await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<SimpleRaceEntity>> GetAllByYearAsync(int year)
@@ -69,6 +71,22 @@ namespace Columbus.Welkom.Client.Repositories
                 .ThenInclude(pr => pr.Pigeon!)
                 .ThenInclude(p => p.Owner)
                 .FirstAsync();
+        }
+
+        public async Task<bool> IsRaceCodePresentForYear(string code, int year)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            return await context.Races.AnyAsync(r => r.Code == code);
+        }
+
+        public async Task<int> DeleteRaceByCodeAndYear(string code, int year)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            IEnumerable<RaceEntity> races = context.Races.Where(r => r.Code == code && r.StartTime.Year == year);
+            context.RemoveRange(races);
+            return await context.SaveChangesAsync();
         }
     }
 }

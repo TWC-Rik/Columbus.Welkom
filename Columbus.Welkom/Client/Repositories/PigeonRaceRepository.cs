@@ -43,7 +43,15 @@ namespace Columbus.Welkom.Client.Repositories
 
             return await context.PigeonRaces.Where(pr => ids.Contains(pr.Id))
                 .ToListAsync();
+        }
 
+        public async Task DeleteAllByRaceId(int raceId)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            IEnumerable<PigeonRaceEntity> pigeonRaces = context.PigeonRaces.Where(pr => pr.RaceId == raceId);
+            context.RemoveRange(pigeonRaces);
+            await context.SaveChangesAsync();
         }
 
         // SqliteWasmHelper does not work perfectly with EFCore.BulkExtensions
