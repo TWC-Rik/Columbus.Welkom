@@ -9,6 +9,7 @@ using KristofferStrube.Blazor.FileSystem;
 using KristofferStrube.Blazor.FileSystemAccess;
 using KristofferStrube.Blazor.Streams;
 using Microsoft.JSInterop;
+using System.Diagnostics;
 using System.Text;
 
 namespace Columbus.Welkom.Client.Services
@@ -128,13 +129,13 @@ namespace Columbus.Welkom.Client.Services
         public async Task StoreRaceAsync(Race race)
         {
             IEnumerable<Owner> raceOwners = race.OwnerRaces.Select(or => or.Owner);
-
             await AddMissingOwners(raceOwners, race.StartTime.Year);
-            IEnumerable<PigeonEntity> allPigeonsInRace = await AddMissingPigeons(race.PigeonRaces.Select(pr => pr.Pigeon), raceOwners);
+
+            IEnumerable<PigeonEntity> allPigeonsInRace = await AddMissingPigeons(raceOwners);
 
             RaceEntity addedRace = await _raceRepository.AddAsync(new RaceEntity(race));
 
-            IEnumerable<PigeonRaceEntity> pigeonRacesToAdd = race.PigeonRaces.Select(pr => new PigeonRaceEntity(pr, allPigeonsInRace.First(p => p.IsPigeon(pr.Pigeon)).Id, addedRace.Id));
+            IEnumerable<PigeonRaceEntity> pigeonRacesToAdd = GetPigeonRaceEntities(race.PigeonRaces, allPigeonsInRace, addedRace.Id);
 
             await _pigeonRaceRepository.AddRangeAsync(pigeonRacesToAdd);
         }
@@ -151,17 +152,43 @@ namespace Columbus.Welkom.Client.Services
             return await _ownerRepository.GetAllByIdsAsync(owners.Select(o => o.ID));
         }
 
-        private async Task<IEnumerable<PigeonEntity>> AddMissingPigeons(IEnumerable<Pigeon> pigeons, IEnumerable<Owner> owners)
+        private async Task<IEnumerable<PigeonEntity>> AddMissingPigeons(IEnumerable<Owner> owners)
         {
+            IEnumerable<Pigeon> pigeons = owners.SelectMany(o => o.Pigeons);
             IEnumerable<PigeonEntity> existingPigeons = await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbers(pigeons);
-            HashSet<int> existingPigeonsHashSet = existingPigeons.Select(ep => ep.GetHashCode()).ToHashSet();
+            HashSet<int> existingPigeonsHashSet = existingPigeons.Select(p => p.GetHashCode()).ToHashSet();
 
-            IEnumerable<PigeonEntity> pigeonsToAdd = pigeons.Where(p => !existingPigeonsHashSet.Contains(p.GetHashCode()))
-                .Select(p => new PigeonEntity(p, owners.First(o => o.Pigeons.Contains(p))));
+            List<PigeonEntity> pigeonsToAdd = new List<PigeonEntity>();
+            foreach (Owner owner in owners)
+            {
+                foreach (Pigeon pigeon in owner.Pigeons)
+                {
+                    if (existingPigeonsHashSet.Contains(pigeon.GetHashCode()))
+                        continue;
+
+                    pigeonsToAdd.Add(new PigeonEntity(pigeon, owner));
+                }
+            }
 
             await _pigeonRepository.AddRangeAsync(pigeonsToAdd);
 
             return await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbers(pigeons);
+        }
+
+        private IEnumerable<PigeonRaceEntity> GetPigeonRaceEntities(IList<PigeonRace> pigeonRaces, IEnumerable<PigeonEntity> pigeonEntities, int raceId)
+        {
+            Dictionary<int, PigeonEntity> pigeonEntitiesSet = pigeonEntities.ToDictionary(p => p.GetHashCode(), p => p);
+
+            List<PigeonRaceEntity> pigeonRaceEntities = new List<PigeonRaceEntity>();
+            foreach (PigeonRace pr in pigeonRaces)
+            {
+                bool found = pigeonEntitiesSet.TryGetValue(pr.Pigeon.GetHashCode(), out PigeonEntity? pigeonEntity);
+                if (!found)
+                    throw new ArgumentException($"Given pigeon list did not contain pigeon {pr.Pigeon}");
+                pigeonRaceEntities.Add(new PigeonRaceEntity(pr, pigeonEntity!.Id, raceId));
+            }
+
+            return pigeonRaceEntities;
         }
 
         public async Task<Race> GetRaceByCodeAndYear(string code, int year)

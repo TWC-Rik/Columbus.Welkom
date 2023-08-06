@@ -23,6 +23,13 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
+// Logging
+#if DEBUG
+    builder.Logging.SetMinimumLevel(LogLevel.Trace);
+#else
+    builder.Logging.SetMinimumLevel(LogLevel.Warning);
+#endif
+
 // DataContext
 builder.Services.AddSqliteWasmDbContextFactory<DataContext>(opts => opts.UseSqlite("Data Source=welkom.sqlite3"));
 
