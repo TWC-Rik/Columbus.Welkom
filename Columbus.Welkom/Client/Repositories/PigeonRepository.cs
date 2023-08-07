@@ -8,35 +8,9 @@ using System.Linq.Dynamic.Core;
 
 namespace Columbus.Welkom.Client.Repositories
 {
-    public class PigeonRepository : IPigeonRepository
+    public class PigeonRepository : BaseRepository<PigeonEntity>, IPigeonRepository
     {
-        private readonly ISqliteWasmDbContextFactory<DataContext> _factory;
-
-        public PigeonRepository(ISqliteWasmDbContextFactory<DataContext> factory)
-        {
-            _factory = factory;
-        }
-
-        public async Task<PigeonEntity> AddAsync(PigeonEntity pigeon)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            context.Add(pigeon);
-            await context.SaveChangesAsync();
-
-            return pigeon;
-        }
-
-        public async Task<IEnumerable<PigeonEntity>> AddRangeAsync(IEnumerable<PigeonEntity> pigeons)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            context.BulkInsert(pigeons);
-            BulkInsertWorkaround(context);
-            await context.SaveChangesAsync();
-
-            return pigeons;
-        }
+        public PigeonRepository(ISqliteWasmDbContextFactory<DataContext> factory): base(factory) { }
 
         public async Task<IEnumerable<PigeonEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
         {
@@ -46,7 +20,17 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<PigeonEntity>> GetPigeonsByCountriesAndYearsAndRingNumbers(IEnumerable<Pigeon> pigeons)
+        public async Task<PigeonEntity> GetByCountryAndYearAndRingNumberAsync(string country, int year, int ringNumber)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            return await context.Pigeons.Where(p => p.Country == country)
+                .Where(p => p.Year == year)
+                .Where(p => p.RingNumber == ringNumber)
+                .FirstAsync();
+        }
+
+        public async Task<IEnumerable<PigeonEntity>> GetPigeonsByCountriesAndYearsAndRingNumbersAsync(IEnumerable<Pigeon> pigeons)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
@@ -61,17 +45,6 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
 
             return result.Where(pe => pigeons.Any(p => p.Country == pe.Country && p.Year == pe.Year && p.RingNumber == pe.RingNumber));
-        }
-
-        // SqliteWasmHelper does not work perfectly with EFCore.BulkExtensions
-        // This is a minor workaround to force inserts.
-        private void BulkInsertWorkaround(DataContext context)
-        {
-            var first = context.Pigeons.FirstOrDefault();
-            if (first != null)
-            {
-                context.Entry(first).State = EntityState.Modified;
-            }
         }
     }
 }

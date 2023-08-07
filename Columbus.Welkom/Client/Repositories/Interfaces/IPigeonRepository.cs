@@ -5,6 +5,8 @@ namespace Columbus.Welkom.Client.Repositories.Interfaces
 {
     public interface IPigeonRepository : IBaseRepository<PigeonEntity>
     {
-        Task<IEnumerable<PigeonEntity>> GetPigeonsByCountriesAndYearsAndRingNumbers(IEnumerable<Pigeon> pigeons);
+        Task<IEnumerable<PigeonEntity>> GetAllByIdsAsync(IEnumerable<int> ids);
+        Task<PigeonEntity> GetByCountryAndYearAndRingNumberAsync(string country, int year, int ringNumber);
+        Task<IEnumerable<PigeonEntity>> GetPigeonsByCountriesAndYearsAndRingNumbersAsync(IEnumerable<Pigeon> pigeons);
     }
 }

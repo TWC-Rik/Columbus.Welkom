@@ -6,34 +6,9 @@ using SqliteWasmHelper;
 
 namespace Columbus.Welkom.Client.Repositories
 {
-    public class RaceRepository : IRaceRepository
+    public class RaceRepository : BaseRepository<RaceEntity>, IRaceRepository
     {
-        private readonly ISqliteWasmDbContextFactory<DataContext> _factory;
-
-        public RaceRepository(ISqliteWasmDbContextFactory<DataContext> factory)
-        {
-            _factory = factory;
-        }
-
-        public async Task<RaceEntity> AddAsync(RaceEntity race)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            context.Races.Add(race);
-            await context.SaveChangesAsync();
-
-            return race;
-        }
-
-        public async Task<IEnumerable<RaceEntity>> AddRangeAsync(IEnumerable<RaceEntity> races)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            context.Races.AddRange(races);
-            await context.SaveChangesAsync();
-
-            return races;
-        }
+        public RaceRepository(ISqliteWasmDbContextFactory<DataContext> factory): base(factory) { }
 
         public async Task<int> DeleteRangeByYearAsync(int year)
         {
@@ -50,6 +25,15 @@ namespace Columbus.Welkom.Client.Repositories
 
             return await context.Races.Where(r => r.StartTime.Year == year)
                 .Select(r => new SimpleRaceEntity(r.Number, r.Type, r.Name, r.Code, r.StartTime, r.Latitude, r.Longitude, r.PigeonRaces!.Select(pr => pr.Pigeon!.Owner).Distinct().Count(), r.PigeonRaces!.Count()))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<RaceEntity>> GetAllByYearAndTypes(int year, RaceType[] types)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            return await context.Races.Where(r => r.StartTime.Year == year)
+                .Where(r => types.Contains(r.Type))
                 .ToListAsync();
         }
 

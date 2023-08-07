@@ -7,14 +7,9 @@ using SqliteWasmHelper;
 
 namespace Columbus.Welkom.Client.Repositories
 {
-    public class OwnerRepository : IOwnerRepository
+    public class OwnerRepository : BaseRepository<OwnerEntity>, IOwnerRepository
     {
-        private readonly ISqliteWasmDbContextFactory<DataContext> _factory;
-
-        public OwnerRepository(ISqliteWasmDbContextFactory<DataContext> factory)
-        {
-            _factory = factory;
-        }
+        public OwnerRepository(ISqliteWasmDbContextFactory<DataContext> factory) : base(factory) { }
 
         public async Task<int> DeleteRangeByYearAsync(int year)
         {
@@ -38,7 +33,8 @@ namespace Columbus.Welkom.Client.Repositories
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            return await context.Owners.Where(o => o.Year == year)
+            return await context.Owners.Where(o => o.Pigeons!.Any())
+                .Where(o => o.Year == year)
                 .Include(o => o.Pigeons!.Where(p => p.Year == year - 1))
                 .ToListAsync();
         }
@@ -47,32 +43,10 @@ namespace Columbus.Welkom.Client.Repositories
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            return await context.Owners.Where(o => o.Year == year)
-                .Include(o => o.Pigeons!.Where(p => p.Year == year - 1))
+            return await context.Owners.Where(o => o.Pigeons!.Any())
+                .Where(o => o.Year == year)
+                .Include(o => o.Pigeons!.Where(p => p.Year == year))
                 .ToListAsync();
-        }
-
-        public async Task<OwnerEntity> AddAsync(OwnerEntity owner)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            context.Owners.Add(owner);
-            await context.SaveChangesAsync();
-
-            return owner;
-        }
-
-        public async Task<IEnumerable<OwnerEntity>> AddRangeAsync(IEnumerable<OwnerEntity> owners)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            HashSet<int> ownerIds = owners.Select(o => o.Id).ToHashSet();
-
-            context.BulkInsert(owners);
-            BulkInsertWorkaround(context);
-            await context.SaveChangesAsync();
-
-            return owners;
         }
 
         public async Task<IEnumerable<OwnerEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
@@ -81,17 +55,6 @@ namespace Columbus.Welkom.Client.Repositories
 
             return await context.Owners.Where(o => ids.Contains(o.Id))
                 .ToListAsync();
-        }
-
-        // SqliteWasmHelper does not work perfectly with EFCore.BulkExtensions
-        // This is a minor workaround to force inserts.
-        private void BulkInsertWorkaround(DataContext context)
-        {
-            var first = context.Owners.FirstOrDefault();
-            if (first != null)
-            {
-                context.Entry(first).State = EntityState.Modified;
-            }
         }
     }
 }
