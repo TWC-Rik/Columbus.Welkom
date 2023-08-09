@@ -112,7 +112,8 @@ namespace Columbus.Welkom.Client.Services
         {
             IEnumerable<SimpleRaceEntity> races = await _raceRepository.GetAllByYearAsync(year);
 
-            return races.Select(r => r.ToSimpleRace());
+            return races.Select(r => r.ToSimpleRace())
+                .OrderBy(r => r.Number);
         }
 
         public async Task OverwriteRacesAsync(IEnumerable<Race> races, int year)
