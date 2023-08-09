@@ -121,7 +121,7 @@ namespace Columbus.Welkom.Client.Services
 
             IEnumerable<Pigeon> pigeonData = races.SelectMany(r => r.PigeonRaces)
                 .Select(pr => pr.Pigeon);
-            IEnumerable<PigeonEntity> pigeonsInRaces = await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbers(pigeonData);
+            IEnumerable<PigeonEntity> pigeonsInRaces = await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbersAsync(pigeonData);
 
             await _raceRepository.AddRangeAsync(races.Select(r => new RaceEntity(r)));
         }
@@ -158,7 +158,7 @@ namespace Columbus.Welkom.Client.Services
         private async Task<IEnumerable<PigeonEntity>> AddMissingPigeons(IEnumerable<Owner> owners)
         {
             IEnumerable<Pigeon> pigeons = owners.SelectMany(o => o.Pigeons);
-            IEnumerable<PigeonEntity> existingPigeons = await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbers(pigeons);
+            IEnumerable<PigeonEntity> existingPigeons = await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbersAsync(pigeons);
             HashSet<int> existingPigeonsHashSet = existingPigeons.Select(p => p.GetHashCode()).ToHashSet();
 
             List<PigeonEntity> pigeonsToAdd = new List<PigeonEntity>();
@@ -175,7 +175,7 @@ namespace Columbus.Welkom.Client.Services
 
             await _pigeonRepository.AddRangeAsync(pigeonsToAdd);
 
-            return await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbers(pigeons);
+            return await _pigeonRepository.GetPigeonsByCountriesAndYearsAndRingNumbersAsync(pigeons);
         }
 
         private IEnumerable<PigeonRaceEntity> GetPigeonRaceEntities(IList<PigeonRace> pigeonRaces, IEnumerable<PigeonEntity> pigeonEntities, int raceId)

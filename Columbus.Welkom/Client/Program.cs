@@ -38,10 +38,14 @@ builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IPigeonRepository, PigeonRepository>();
 builder.Services.AddScoped<IPigeonRaceRepository, PigeonRaceRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
+builder.Services.AddScoped<ISelectedYearPigeonRepository, SelectedYearPigeonRepository>();
+builder.Services.AddScoped<ISelectedYoungPigeonRepository, SelectedYoungPigeonRepository>();
 
 //Services
 builder.Services.AddScoped<ILeaguesService, LeaguesService>();
 builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<IRaceService, RaceService>();
+builder.Services.AddScoped<ISelectedYearPigeonService, SelectedYearPigeonService>();
+builder.Services.AddScoped<ISelectedYoungPigeonService, SelectedYoungPigeonService>();
 
 await builder.Build().RunAsync();
