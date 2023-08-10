@@ -41,7 +41,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-BmIfEj5A3nn68YKbp+VXMI4PVrheUmdLjNOo+Et6fIk=",
+      "hash": "sha256-+pfUIAfzqysw8kySWaZM06\/Sp2Ch\/cUsmxUyYd1i\/cw=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -65,7 +65,7 @@
       "url": "_framework\/Columbus.UDP.dll"
     },
     {
-      "hash": "sha256-5Wm1unuwK53ac5eH6hzlER9Y7wBKzWWHKMhcZZHO894=",
+      "hash": "sha256-lS7wvI\/fPYw6sdVgEC8Q4I0jS36WWBRkDwm+2xsMQv0=",
       "url": "_framework\/Columbus.Welkom.Client.dll"
     },
     {
@@ -829,5 +829,5 @@
       "url": "_content\/SqliteWasmHelper\/browserCache.js"
     }
   ],
-  "version": "7N39tnOA"
+  "version": "r3TeYqOk"
 };
