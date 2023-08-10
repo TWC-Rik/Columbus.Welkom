@@ -40,6 +40,7 @@ builder.Services.AddScoped<IPigeonRaceRepository, PigeonRaceRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceRepository>();
 builder.Services.AddScoped<ISelectedYearPigeonRepository, SelectedYearPigeonRepository>();
 builder.Services.AddScoped<ISelectedYoungPigeonRepository, SelectedYoungPigeonRepository>();
+builder.Services.AddScoped<IPigeonSwapRepository, PigeonSwapRepository>();
 
 //Services
 builder.Services.AddScoped<ILeaguesService, LeaguesService>();
@@ -47,5 +48,6 @@ builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<IRaceService, RaceService>();
 builder.Services.AddScoped<ISelectedYearPigeonService, SelectedYearPigeonService>();
 builder.Services.AddScoped<ISelectedYoungPigeonService, SelectedYoungPigeonService>();
+builder.Services.AddScoped<IPigeonSwapService, PigeonSwapService>();
 
 await builder.Build().RunAsync();
