@@ -102,7 +102,7 @@ namespace Columbus.Welkom.Client.Services
         {
             var file = await fileHandle.GetFileAsync();
             ReadableStream readableStream = await file.StreamAsync();
-            var stream = new StreamReader(readableStream, Encoding.Latin1, false, 1_000_000);
+            var stream = new StreamReader(readableStream, Encoding.Latin1, false, 10_000_000);
 
             IRaceReader raceReader = new RaceReader();
             return await raceReader.GetRaceAsync(stream);
