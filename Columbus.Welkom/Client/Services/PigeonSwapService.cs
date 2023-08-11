@@ -1,4 +1,5 @@
-﻿using Columbus.Welkom.Client.Models;
+﻿using Columbus.Models;
+using Columbus.Welkom.Client.Models;
 using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Services.Interfaces;
@@ -9,18 +10,44 @@ namespace Columbus.Welkom.Client.Services
     {
         private readonly IPigeonRepository _pigeonRepository;
         private readonly IPigeonSwapRepository _pigeonSwapRepository;
+        private readonly IRaceRepository _raceRepository;
 
-        public PigeonSwapService(IPigeonRepository pigeonRepository, IPigeonSwapRepository pigeonSwapRepository)
+        public PigeonSwapService(IPigeonRepository pigeonRepository, IPigeonSwapRepository pigeonSwapRepository, IRaceRepository raceRepository)
         {
             _pigeonRepository = pigeonRepository;
             _pigeonSwapRepository = pigeonSwapRepository;
+            _raceRepository = raceRepository;
         }
 
         public async Task<IEnumerable<PigeonSwapPair>> GetPigeonSwapPairsByYearAsync(int year)
         {
             IEnumerable<PigeonSwapEntity> pigeonSwapEntities = await _pigeonSwapRepository.GetAllByYearAsync(year);
 
-            return pigeonSwapEntities.Select(ps => ps.ToPigeonSwapPair());
+            IEnumerable<RaceEntity> raceEntities = await _raceRepository.GetAllByYearAndTypes(year, new[] { RaceType.L });
+            IEnumerable<Race> races = raceEntities.Select(r => r.ToRace());
+
+            List<PigeonSwapPair> pigeonSwapPairs = pigeonSwapEntities.Select(ps => ps.ToPigeonSwapPair()).ToList();
+
+            Dictionary<Pigeon, PigeonSwapPair> pigeonPigeonSwapPairs = pigeonSwapPairs.ToDictionary(ps => ps.Pigeon!, ps => ps);
+            HashSet<Pigeon> pigeonsInPairs = pigeonSwapPairs.Select(ps => ps.Pigeon!).ToHashSet();
+
+            foreach (Race race in races)
+            {
+                IEnumerable<PigeonRace> pigeonRaces = race.PigeonRaces.Where(pr => pigeonsInPairs.Contains(pr.Pigeon))
+                    .OrderByDescending(pr => pr.Speed);
+                SimpleRace simpleRace = new SimpleRace(race.Number, race.Type, race.Name, race.Code, race.StartTime, race.Location, race.OwnerRaces.Count, race.PigeonRaces.Count);
+
+                int prizeCount = pigeonRaces.Where(pr => pr.ArrivalTime != DateTime.MinValue).Count();
+                double pointStep = 170 / Math.Max(prizeCount - 1, 1);
+                int i = 0;
+                foreach (PigeonRace pigeonRace in pigeonRaces)
+                {
+                    int points = Convert.ToInt32(Math.Round(200.0 - pointStep * i++));
+                    pigeonPigeonSwapPairs[pigeonRace.Pigeon].RacePoints!.Add(simpleRace, points);
+                }
+            }
+
+            return pigeonSwapPairs;
         }
 
         public async Task UpdatePigeonSwapPairAsync(int year, PigeonSwapPair pigeonSwapPair)

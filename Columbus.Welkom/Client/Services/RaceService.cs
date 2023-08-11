@@ -110,7 +110,15 @@ namespace Columbus.Welkom.Client.Services
 
         public async Task<IEnumerable<SimpleRace>> GetAllRacesByYearAsync(int year)
         {
-            IEnumerable<SimpleRaceEntity> races = await _raceRepository.GetAllByYearAsync(year);
+            IEnumerable<SimpleRaceEntity> races = await _raceRepository.GetAllSimpleByYearAsync(year);
+
+            return races.Select(r => r.ToSimpleRace())
+                .OrderBy(r => r.Number);
+        }
+
+        public async Task<IEnumerable<SimpleRace>> GetAllRacesByYearAndTypeAsync(int year, RaceType type)
+        {
+            IEnumerable<SimpleRaceEntity> races = await _raceRepository.GetAllSimpleByYearAndTypes(year, new[] { type });
 
             return races.Select(r => r.ToSimpleRace())
                 .OrderBy(r => r.Number);

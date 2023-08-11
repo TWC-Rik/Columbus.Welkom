@@ -1,6 +1,7 @@
 ﻿@page "/pigeonswap"
 @inject IOwnerService OwnerService
 @inject IPigeonSwapService PigeonSwapService
+@inject IRaceService RaceService
 
 <RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Vertical">
     <RadzenText TextStyle="TextStyle.DisplayH6">
@@ -61,7 +62,15 @@
                     </RadzenDropDown>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Punten" Property="Points" />
+            @foreach (SimpleRace race in _races)
+            {
+                <RadzenDataGridColumn TItem="PigeonSwapPair" Title="@race.Name">
+                    <Template>
+                        @context.RacePoints?.First(rp => rp.Key.Code == race.Code)
+                    </Template>
+                </RadzenDataGridColumn>
+            }
+            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Totaal" Property="Points" />
             <RadzenDataGridColumn TItem="PigeonSwapPair" Width="50px">
                 <Template>
                     <RadzenButton ButtonStyle="ButtonStyle.Danger"
@@ -82,6 +91,7 @@
     private RadzenDataGrid<PigeonSwapPair> _pigeonSwapGrid = null!;
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<PigeonSwapPair> _pigeonSwapPairs = null!;
+    private IEnumerable<SimpleRace> _races = null!;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -89,6 +99,7 @@
 
         _allOwners = await OwnerService.GetOwnersByYearWithYoungPigeonsAsync(Year);
         _pigeonSwapPairs = await PigeonSwapService.GetPigeonSwapPairsByYearAsync(Year);
+        _races = await RaceService.GetAllRacesByYearAndTypeAsync(Year, RaceType.L);
     }
 
     private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons ?? new List<Pigeon>();
