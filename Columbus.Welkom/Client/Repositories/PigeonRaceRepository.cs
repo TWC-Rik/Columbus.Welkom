@@ -11,14 +11,6 @@ namespace Columbus.Welkom.Client.Repositories
     {
         public PigeonRaceRepository(ISqliteWasmDbContextFactory<DataContext> factory): base(factory) { }
 
-        public async Task<IEnumerable<PigeonRaceEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            return await context.PigeonRaces.Where(pr => ids.Contains(pr.Id))
-                .ToListAsync();
-        }
-
         public async Task DeleteAllByRaceId(int raceId)
         {
             using DataContext context = await _factory.CreateDbContextAsync();

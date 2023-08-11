@@ -141,7 +141,7 @@ namespace Columbus.Welkom.Client.Services
                 return;
 
             IEnumerable<Owner> raceOwners = race.OwnerRaces.Select(or => or.Owner);
-            await AddMissingOwners(raceOwners, race.StartTime.Year);
+            await AddMissingOwners(raceOwners);
 
             IEnumerable<PigeonEntity> allPigeonsInRace = await AddMissingPigeons(raceOwners);
 
@@ -152,14 +152,14 @@ namespace Columbus.Welkom.Client.Services
             await _pigeonRaceRepository.AddRangeAsync(pigeonRacesToAdd);
         }
 
-        private async Task<IEnumerable<OwnerEntity>> AddMissingOwners(IEnumerable<Owner> owners, int year)
+        private async Task<IEnumerable<OwnerEntity>> AddMissingOwners(IEnumerable<Owner> owners)
         {
             IEnumerable<OwnerEntity> existingOwners = await _ownerRepository.GetAllByIdsAsync(owners.Select(o => o.ID));
             HashSet<int> ownerIds = existingOwners.Select(o => o.Id).ToHashSet();
 
             IEnumerable<Owner> ownersToAdd = owners.Where(o => !ownerIds.Contains(o.ID));
 
-            IEnumerable<OwnerEntity> addedOwners = await _ownerRepository.AddRangeAsync(ownersToAdd.Select(o => new OwnerEntity(o, year)));
+            IEnumerable<OwnerEntity> addedOwners = await _ownerRepository.AddRangeAsync(ownersToAdd.Select(o => new OwnerEntity(o)));
 
             return await _ownerRepository.GetAllByIdsAsync(owners.Select(o => o.ID));
         }

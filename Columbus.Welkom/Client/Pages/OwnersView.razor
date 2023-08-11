@@ -43,7 +43,7 @@
         _isLoading = true;
         await base.OnParametersSetAsync();
 
-        _owners = await OwnerService.GetOwnersByYearWithAllPigeonsAsync(Year);
+        _owners = await OwnerService.GetOwnersWithAllPigeonsAsync();
         _isLoading = false;
     }
 
@@ -60,7 +60,7 @@
             return;
         }
 
-        await OwnerService.OverwriteOwnersAsync(_owners, Year);
+        await OwnerService.OverwriteOwnersAsync(_owners);
         _isUploading = false;
     }
 }

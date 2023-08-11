@@ -2,7 +2,7 @@
 
 namespace Columbus.Welkom.Client.Models.Entities
 {
-    public class PigeonEntity
+    public class PigeonEntity : BaseEntity
     {
         public PigeonEntity() { }
 
@@ -26,7 +26,6 @@ namespace Columbus.Welkom.Client.Models.Entities
             OwnerId = ownerId;
         }
 
-        public int Id { get; set; }
         public int Year { get; set; }
         public string Country { get; set; } = string.Empty;
         public int RingNumber { get; set; }

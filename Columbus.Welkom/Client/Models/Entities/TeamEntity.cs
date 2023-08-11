@@ -1,8 +1,7 @@
 ﻿namespace Columbus.Welkom.Client.Models.Entities
 {
-    public class TeamEntity
+    public class TeamEntity : BaseEntity
     {
-        public int Id { get; set; }
         public int Year { get; set; }
         public int FirstOwnerId { get; set; }
         public int SecondOwnerId { get; set; }

@@ -2,22 +2,19 @@
 
 namespace Columbus.Welkom.Client.Models.Entities
 {
-    public class OwnerEntity
+    public class OwnerEntity : BaseEntity
     {
         public OwnerEntity() { }
 
-        public OwnerEntity(Owner owner, int year)
+        public OwnerEntity(Owner owner)
         {
             Id = owner.ID;
-            Year = year;
             Name = owner.Name;
             Latitude = owner.Coordinate?.Lattitude ?? 0;
             Longitude = owner.Coordinate?.Longitude ?? 0;
             Club = owner.Club;
         }
 
-        public int Id { get; set; }
-        public int Year { get; set; }
         public string Name { get; set; } = string.Empty;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
