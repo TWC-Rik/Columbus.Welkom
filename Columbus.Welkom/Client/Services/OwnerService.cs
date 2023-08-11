@@ -52,32 +52,33 @@ namespace Columbus.Welkom.Client.Services
             return await ownerReader.GetOwnersAsync(stream);
         }
 
-        public async Task<IEnumerable<Owner>> GetOwnersByYearWithAllPigeonsAsync(int year)
+        public async Task<IEnumerable<Owner>> GetOwnersWithAllPigeonsAsync()
         {
-            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearWithAllPigeonsAsync(year);
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithAllPigeonsAsync();
 
             return owners.Select(o => o.ToOwner());
         }
 
         public async Task<IEnumerable<Owner>> GetOwnersByYearWithYearPigeonsAsync(int year)
         {
-            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearWithYearPigeonsAsync(year);
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithYearPigeonsAsync(year);
 
             return owners.Select(o => o.ToOwner());
         }
 
         public async Task<IEnumerable<Owner>> GetOwnersByYearWithYoungPigeonsAsync(int year)
         {
-            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllByYearWithYoungPigeonsAsync(year);
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithYoungPigeonsAsync(year);
 
             return owners.Select(o => o.ToOwner());
         }
 
-        public async Task OverwriteOwnersAsync(IEnumerable<Owner> owners, int year)
+        public async Task OverwriteOwnersAsync(IEnumerable<Owner> owners)
         {
-            await _ownerRepository.DeleteRangeByYearAsync(year);
+            IEnumerable<OwnerEntity> currentOwners = await _ownerRepository.GetAllAsync();
+            await _ownerRepository.DeleteRangeAsync(currentOwners);
 
-            List<OwnerEntity> ownerEntities = owners.Select(o => new OwnerEntity(o, year))
+            List<OwnerEntity> ownerEntities = owners.Select(o => new OwnerEntity(o))
                 .ToList();
             List<PigeonEntity> pigeonEntities = owners.SelectMany(o => o.Pigeons.Select(p => new PigeonEntity(p, o.ID)))
                 .ToList();

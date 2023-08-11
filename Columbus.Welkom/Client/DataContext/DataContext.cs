@@ -46,7 +46,6 @@ namespace Columbus.Welkom.Client
             modelBuilder.Entity<OwnerEntity>().Property(e => e.Id)
                 .ValueGeneratedNever();
             modelBuilder.Entity<OwnerEntity>().HasKey(e => e.Id);
-            modelBuilder.Entity<OwnerEntity>().HasIndex(e => e.Year);
             modelBuilder.Entity<OwnerEntity>().HasMany(e => e.Pigeons)
                 .WithOne(e => e.Owner)
                 .HasForeignKey(e => e.OwnerId);

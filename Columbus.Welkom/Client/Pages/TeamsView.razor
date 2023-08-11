@@ -69,7 +69,7 @@
     {
         await base.OnParametersSetAsync();
 
-        _allOwners = await OwnerService.GetOwnersByYearWithAllPigeonsAsync(Year);
+        _allOwners = await OwnerService.GetOwnersWithAllPigeonsAsync();
         _teams = new List<Team>();
     }
 

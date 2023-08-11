@@ -1,8 +1,7 @@
 ﻿namespace Columbus.Welkom.Client.Models.Entities
 {
-    public class PigeonSwapEntity
+    public class PigeonSwapEntity : BaseEntity
     {
-        public int Id { get; set; }
         public int Year { get; set; }
         public int PlayerId { get; set; }
         public int OwnerId { get; set; }

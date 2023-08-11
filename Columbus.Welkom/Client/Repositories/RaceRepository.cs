@@ -40,14 +40,6 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<RaceEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            return await context.Races.Where(o => ids.Contains(o.Id))
-                .ToListAsync();
-        }
-
         public async Task<RaceEntity> GetByCodeAndYear(string code, int year)
         {
             using DataContext context = await _factory.CreateDbContextAsync();

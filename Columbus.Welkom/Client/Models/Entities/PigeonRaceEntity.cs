@@ -2,7 +2,7 @@
 
 namespace Columbus.Welkom.Client.Models.Entities
 {
-    public class PigeonRaceEntity
+    public class PigeonRaceEntity : BaseEntity
     {
         public PigeonRaceEntity() { }
 
@@ -22,7 +22,6 @@ namespace Columbus.Welkom.Client.Models.Entities
             ArrivalTime = pigeonRace.ArrivalTime;
         }
 
-        public int Id { get; set; }
         public int PigeonId { get; set; }
         public int RaceId { get; set; }
         public int Mark { get; set; }

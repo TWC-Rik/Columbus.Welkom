@@ -12,14 +12,6 @@ namespace Columbus.Welkom.Client.Repositories
     {
         public PigeonRepository(ISqliteWasmDbContextFactory<DataContext> factory): base(factory) { }
 
-        public async Task<IEnumerable<PigeonEntity>> GetAllByIdsAsync(IEnumerable<int> ids)
-        {
-            using DataContext context = await _factory.CreateDbContextAsync();
-
-            return await context.Pigeons.Where(o => ids.Contains(o.Id))
-                .ToListAsync();
-        }
-
         public async Task<PigeonEntity> GetByCountryAndYearAndRingNumberAsync(string country, int year, int ringNumber)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
