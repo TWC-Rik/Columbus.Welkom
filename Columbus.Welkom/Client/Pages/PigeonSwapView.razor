@@ -19,6 +19,9 @@
                 <Template>
                     <RadzenDropDown TValue="Owner"
                                     Data="_allOwners"
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    FilterOperator="StringFilterOperator.Contains"
+                                    AllowFiltering="true"
                                     @bind-Value="context.Player"
                                     Change="@(() => HandlePlayerChange(context))"
                                     Style="width: 100%">
@@ -32,6 +35,9 @@
                 <Template>
                     <RadzenDropDown TValue="Owner"
                                     Data="_allOwners"
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    FilterOperator="StringFilterOperator.Contains"
+                                    AllowFiltering="true"
                                     @bind-Value="context.Owner"
                                     Style="width: 100%">
                         <Template Context="possibleOwner">
@@ -44,6 +50,9 @@
                 <Template>
                     <RadzenDropDown TValue="Pigeon"
                                     Data="SelectablePigeons(context.Owner)"
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    FilterOperator="StringFilterOperator.Contains"
+                                    AllowFiltering="true"
                                     @bind-Value="context.Pigeon"
                                     Change="@(() => HandlePigeonChange(context))"
                                     Style="width: 100%" />
@@ -53,6 +62,9 @@
                 <Template>
                     <RadzenDropDown TValue="Owner"
                                     Data="_allOwners"
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    FilterOperator="StringFilterOperator.Contains"
+                                    AllowFiltering="true"
                                     @bind-Value="context.CoupledPlayer"
                                     Change="@(() => HandleCoupledPlayerChange(context))"
                                     Style="width: 100%">
@@ -64,13 +76,13 @@
             </RadzenDataGridColumn>
             @foreach (SimpleRace race in _races)
             {
-                <RadzenDataGridColumn TItem="PigeonSwapPair" Title="@race.Name">
+                <RadzenDataGridColumn TItem="PigeonSwapPair" Title="@race.Name" Width="100px">
                     <Template>
-                        @context.RacePoints?.First(rp => rp.Key.Code == race.Code)
+                        @context.RacePoints?.FirstOrDefault(rp => rp.Key.Code == race.Code).Value
                     </Template>
                 </RadzenDataGridColumn>
             }
-            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Totaal" Property="Points" />
+            <RadzenDataGridColumn TItem="PigeonSwapPair" Title="Totaal" Property="Points" Width="100px" />
             <RadzenDataGridColumn TItem="PigeonSwapPair" Width="50px">
                 <Template>
                     <RadzenButton ButtonStyle="ButtonStyle.Danger"
@@ -91,7 +103,7 @@
     private RadzenDataGrid<PigeonSwapPair> _pigeonSwapGrid = null!;
     private IEnumerable<Owner> _allOwners = null!;
     private IEnumerable<PigeonSwapPair> _pigeonSwapPairs = null!;
-    private IEnumerable<SimpleRace> _races = null!;
+    private IEnumerable<SimpleRace> _races = new List<SimpleRace>();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -100,9 +112,20 @@
         _allOwners = await OwnerService.GetOwnersByYearWithYoungPigeonsAsync(Year);
         _pigeonSwapPairs = await PigeonSwapService.GetPigeonSwapPairsByYearAsync(Year);
         _races = await RaceService.GetAllRacesByYearAndTypeAsync(Year, RaceType.L);
+
+        foreach (PigeonSwapPair pigeonSwapPair in _pigeonSwapPairs)
+            pigeonSwapPair.Owner!.Pigeons = _allOwners.First(o => o.ID == pigeonSwapPair.Owner.ID).Pigeons;
     }
 
-    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner) => owner?.Pigeons ?? new List<Pigeon>();
+    private IEnumerable<Pigeon> SelectablePigeons(Owner? owner)
+    {
+        if (owner is null)
+            return new List<Pigeon>();
+
+        return owner.Pigeons.OrderBy(p => p.Country)
+            .ThenBy(p => p.Year)
+            .ThenBy(p => p.RingNumber);
+    }
 
     private async Task HandlePlayerChange(PigeonSwapPair pigeonSwapPair)
     {
@@ -112,13 +135,20 @@
 
     private async Task HandlePigeonChange(PigeonSwapPair pigeonSwapPair)
     {
+        if (pigeonSwapPair.Pigeon is null || pigeonSwapPair.CoupledPlayer is null)
+            return;
+
         await PigeonSwapService.UpdatePigeonSwapPairAsync(Year, pigeonSwapPair);
         _pigeonSwapPairs = await PigeonSwapService.GetPigeonSwapPairsByYearAsync(Year);
     }
 
     private async Task HandleCoupledPlayerChange(PigeonSwapPair pigeonSwapPair)
     {
+        if (pigeonSwapPair.Pigeon is null || pigeonSwapPair.CoupledPlayer is null)
+            return;
+
         await PigeonSwapService.UpdatePigeonSwapPairAsync(Year, pigeonSwapPair);
+        _pigeonSwapPairs = await PigeonSwapService.GetPigeonSwapPairsByYearAsync(Year);
     }
 
     private async Task DeletePigeonSwapPair(PigeonSwapPair pigeonSwapPair)

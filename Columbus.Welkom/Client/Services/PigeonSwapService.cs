@@ -47,7 +47,7 @@ namespace Columbus.Welkom.Client.Services
                 }
             }
 
-            return pigeonSwapPairs;
+            return pigeonSwapPairs.OrderByDescending(ps => ps.Points);
         }
 
         public async Task UpdatePigeonSwapPairAsync(int year, PigeonSwapPair pigeonSwapPair)
