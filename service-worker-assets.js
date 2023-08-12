@@ -41,7 +41,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-QaFYnpdIm4qwVA8qyq3MrCYxvViz7aLETv94rHEXjsM=",
+      "hash": "sha256-sKDpBV0PkS+OI33riB6yZ2rJ2n43pjyoQuS\/gKbm20c=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -61,11 +61,11 @@
       "url": "_framework\/Columbus.Models.dll"
     },
     {
-      "hash": "sha256-BLQlPJ9zPJMwYa9ZRKP5MOtjO14IoOyTFPntm+dhj+g=",
+      "hash": "sha256-141lUFBKUEEedy1jjZcXBXBpoBop90ONnTqQXdHBUF0=",
       "url": "_framework\/Columbus.UDP.dll"
     },
     {
-      "hash": "sha256-ZLGtpN\/GWmwnPDwQyv++KaHju+Cwb0k9yPR\/HjWUXTg=",
+      "hash": "sha256-78lLnosCWjXOKkcoCVjOl7VaSVQtT\/9Hk4X1og4NJDg=",
       "url": "_framework\/Columbus.Welkom.Client.dll"
     },
     {
@@ -829,5 +829,5 @@
       "url": "_content\/SqliteWasmHelper\/browserCache.js"
     }
   ],
-  "version": "QKlBbLET"
+  "version": "xkHp6raU"
 };
