@@ -12,5 +12,13 @@
         public OwnerEntity? Owner { get; set; }
         public PigeonEntity? Pigeon { get; set; }
         public OwnerEntity? CoupledPlayer { get; set; }
+
+        public PigeonSwapPair ToPigeonSwapPair()
+        {
+            if (Player is null || Owner is null || Pigeon is null || CoupledPlayer is null)
+                throw new ArgumentNullException("One or more of the related entities is not set.");
+
+            return new PigeonSwapPair(Id, Player.ToOwner(), Owner.ToOwner(), Pigeon.ToPigeon(), CoupledPlayer.ToOwner());
+        }
     }
 }

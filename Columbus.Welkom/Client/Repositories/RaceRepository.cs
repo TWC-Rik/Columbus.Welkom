@@ -19,7 +19,7 @@ namespace Columbus.Welkom.Client.Repositories
             return await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<SimpleRaceEntity>> GetAllByYearAsync(int year)
+        public async Task<IEnumerable<SimpleRaceEntity>> GetAllSimpleByYearAsync(int year)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
@@ -37,6 +37,16 @@ namespace Columbus.Welkom.Client.Repositories
                 .Include(r => r.PigeonRaces!)
                 .ThenInclude(pr => pr.Pigeon!)
                 .ThenInclude(p => p.Owner)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<SimpleRaceEntity>> GetAllSimpleByYearAndTypes(int year, RaceType[] types)
+        {
+            using DataContext context = await _factory.CreateDbContextAsync();
+
+            return await context.Races.Where(r => r.StartTime.Year == year)
+                .Where(r => types.Contains(r.Type))
+                .Select(r => new SimpleRaceEntity(r.Number, r.Type, r.Name, r.Code, r.StartTime, r.Latitude, r.Longitude, r.PigeonRaces!.Select(pr => pr.Pigeon!.Owner).Distinct().Count(), r.PigeonRaces!.Count()))
                 .ToListAsync();
         }
 

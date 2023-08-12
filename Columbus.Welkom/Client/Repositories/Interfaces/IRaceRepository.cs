@@ -8,7 +8,8 @@ namespace Columbus.Welkom.Client.Repositories.Interfaces
         Task<int> DeleteRaceByCodeAndYear(string code, int year);
         Task<int> DeleteRangeByYearAsync(int year);
         Task<IEnumerable<RaceEntity>> GetAllByYearAndTypes(int year, RaceType[] types);
-        Task<IEnumerable<SimpleRaceEntity>> GetAllByYearAsync(int year);
+        Task<IEnumerable<SimpleRaceEntity>> GetAllSimpleByYearAsync(int year);
+        Task<IEnumerable<SimpleRaceEntity>> GetAllSimpleByYearAndTypes(int year, RaceType[] types);
         Task<RaceEntity> GetByCodeAndYear(string code, int year);
         Task<bool> IsRaceCodePresentForYear(string code, int year);
     }
