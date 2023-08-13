@@ -1,19 +1,24 @@
 ﻿using Columbus.Models;
+using Columbus.Welkom.Client.Export;
 using Columbus.Welkom.Client.Models;
 using Columbus.Welkom.Client.Models.Entities;
 using Columbus.Welkom.Client.Repositories.Interfaces;
 using Columbus.Welkom.Client.Services.Interfaces;
+using KristofferStrube.Blazor.FileSystem;
+using KristofferStrube.Blazor.FileSystemAccess;
 
 namespace Columbus.Welkom.Client.Services
 {
     public class PigeonSwapService : IPigeonSwapService
     {
+        private readonly IFileSystemAccessService _fileSystemAccessService;
         private readonly IPigeonRepository _pigeonRepository;
         private readonly IPigeonSwapRepository _pigeonSwapRepository;
         private readonly IRaceRepository _raceRepository;
 
-        public PigeonSwapService(IPigeonRepository pigeonRepository, IPigeonSwapRepository pigeonSwapRepository, IRaceRepository raceRepository)
+        public PigeonSwapService(IFileSystemAccessService fileSystemAccessService, IPigeonRepository pigeonRepository, IPigeonSwapRepository pigeonSwapRepository, IRaceRepository raceRepository)
         {
+            _fileSystemAccessService = fileSystemAccessService;
             _pigeonRepository = pigeonRepository;
             _pigeonSwapRepository = pigeonSwapRepository;
             _raceRepository = raceRepository;
@@ -93,6 +98,23 @@ namespace Columbus.Welkom.Client.Services
                 throw new ArgumentNullException("PigeonSwapPair player and pigeon cannot be null");
 
             await _pigeonSwapRepository.DeleteByYearAndPlayerAndPigeonAsync(year, pigeonSwapPair.Player.ID, pigeonSwapPair.Pigeon.Country, pigeonSwapPair.Pigeon.Year, pigeonSwapPair.Pigeon.RingNumber);
+        }
+
+        public async Task ExportToPdf(IEnumerable<PigeonSwapPair> pigeonSwapPairs)
+        {
+            PigeonSwapDocument document = new PigeonSwapDocument(pigeonSwapPairs);
+            byte[] data = document.GetDocument();
+
+            FileSystemOptions options = new FileSystemOptions()
+            {
+
+            };
+
+            FileSystemFileHandle fileSystemFileHandle = await _fileSystemAccessService.ShowSaveFilePickerAsync();
+            FileSystemWritableFileStream fileSystemWritableFileStream = await fileSystemFileHandle.CreateWritableAsync();
+
+            await fileSystemWritableFileStream.WriteAsync(data);
+            await fileSystemWritableFileStream.CloseAsync();
         }
     }
 }

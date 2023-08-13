@@ -8,10 +8,19 @@
         Duivenwissel
     </RadzenText>
 
-    <RadzenButton ButtonStyle="ButtonStyle.Primary"
-                  Text="Koppel Toevoegen"
-                  Icon="playlist_add"
-                  Click="AddPigeonSwapPair" />
+    <RadzenStack Orientation="Orientation.Horizontal">
+        <RadzenButton ButtonStyle="ButtonStyle.Primary"
+                      Text="Koppel Toevoegen"
+                      Icon="playlist_add"
+                      Click="AddPigeonSwapPair" />
+
+        <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                      Text="Exporteren naar PDF"
+                      Icon="picture_as_pdf"
+                      Click="ExportToPdf" />
+    </RadzenStack>
+
+
 
     <RadzenDataGrid Data="_pigeonSwapPairs" EmptyText="Geen duivenwisselkoppels gevonden." @ref="_pigeonSwapGrid">
         <Columns>
@@ -159,4 +168,8 @@
 
     private void AddPigeonSwapPair() => _pigeonSwapGrid.InsertRow(new PigeonSwapPair());
 
+    private async Task ExportToPdf()
+    {
+        await PigeonSwapService.ExportToPdf(_pigeonSwapPairs);
+    }
 }
