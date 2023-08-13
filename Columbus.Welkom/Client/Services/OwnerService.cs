@@ -59,16 +59,16 @@ namespace Columbus.Welkom.Client.Services
             return owners.Select(o => o.ToOwner());
         }
 
-        public async Task<IEnumerable<Owner>> GetOwnersByYearWithYearPigeonsAsync(int year)
+        public async Task<IEnumerable<Owner>> GetOwnersByYearWithYearPigeonsAsync(int year, bool includeOwnersWithoutPigeons = false)
         {
-            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithYearPigeonsAsync(year);
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithYearPigeonsAsync(year, includeOwnersWithoutPigeons);
 
             return owners.Select(o => o.ToOwner());
         }
 
-        public async Task<IEnumerable<Owner>> GetOwnersByYearWithYoungPigeonsAsync(int year)
+        public async Task<IEnumerable<Owner>> GetOwnersByYearWithYoungPigeonsAsync(int year, bool includeOwnersWithoutPigeons = false)
         {
-            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithYoungPigeonsAsync(year);
+            IEnumerable<OwnerEntity> owners = await _ownerRepository.GetAllWithYoungPigeonsAsync(year, includeOwnersWithoutPigeons);
 
             return owners.Select(o => o.ToOwner());
         }

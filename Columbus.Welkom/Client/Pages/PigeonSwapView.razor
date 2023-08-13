@@ -118,7 +118,7 @@
     {
         await base.OnParametersSetAsync();
 
-        _allOwners = await OwnerService.GetOwnersByYearWithYoungPigeonsAsync(Year);
+        _allOwners = await OwnerService.GetOwnersByYearWithYoungPigeonsAsync(Year, true);
         _pigeonSwapPairs = await PigeonSwapService.GetPigeonSwapPairsByYearAsync(Year);
         _races = await RaceService.GetAllRacesByYearAndTypeAsync(Year, RaceType.L);
 

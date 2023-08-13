@@ -24,21 +24,29 @@ namespace Columbus.Welkom.Client.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<OwnerEntity>> GetAllWithYearPigeonsAsync(int year)
+        public async Task<IEnumerable<OwnerEntity>> GetAllWithYearPigeonsAsync(int year, bool includeOwnersWithoutPigeons)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            return await context.Owners.Where(o => o.Pigeons!.Any())
-                .Include(o => o.Pigeons!.Where(p => p.Year == year - 1))
+            var query = context.Owners.AsQueryable();
+
+            if (!includeOwnersWithoutPigeons)
+                query = query.Where(o => o.Pigeons!.Any());
+
+            return await query.Include(o => o.Pigeons!.Where(p => p.Year == year - 1))
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<OwnerEntity>> GetAllWithYoungPigeonsAsync(int year)
+        public async Task<IEnumerable<OwnerEntity>> GetAllWithYoungPigeonsAsync(int year, bool includeOwnersWithoutPigeons)
         {
             using DataContext context = await _factory.CreateDbContextAsync();
 
-            return await context.Owners.Where(o => o.Pigeons!.Any())
-                .Include(o => o.Pigeons!.Where(p => p.Year == year))
+            var query = context.Owners.AsQueryable();
+
+            if (!includeOwnersWithoutPigeons)
+                query = query.Where(o => o.Pigeons!.Any());
+
+            return await query.Include(o => o.Pigeons!.Where(p => p.Year == year))
                 .ToListAsync();
         }
     }

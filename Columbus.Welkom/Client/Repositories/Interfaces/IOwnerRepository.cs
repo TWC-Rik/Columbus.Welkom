@@ -6,7 +6,7 @@ namespace Columbus.Welkom.Client.Repositories.Interfaces
     {
         Task<IEnumerable<OwnerEntity>> GetAllAsync();
         Task<IEnumerable<OwnerEntity>> GetAllWithAllPigeonsAsync();
-        Task<IEnumerable<OwnerEntity>> GetAllWithYearPigeonsAsync(int year);
-        Task<IEnumerable<OwnerEntity>> GetAllWithYoungPigeonsAsync(int year);
+        Task<IEnumerable<OwnerEntity>> GetAllWithYearPigeonsAsync(int year, bool includeOwnersWithoutPigeons);
+        Task<IEnumerable<OwnerEntity>> GetAllWithYoungPigeonsAsync(int year, bool includeOwnersWithoutPigeons);
     }
 }
